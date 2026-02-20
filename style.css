@@ -1,0 +1,234 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #ffffff;
+  color: #222;
+  scroll-behavior: smooth;
+}
+
+/* NAVBAR */
+
+.nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(255,255,255,0.95);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  z-index: 1000;
+}
+
+.nav h2 {
+  color: #b89b5e;
+  letter-spacing: 2px;
+}
+
+.nav a {
+  color: #444;
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  color: #b89b5e;
+}
+
+/* HERO */
+
+.hero {
+  height: 100vh;
+  background: linear-gradient(135deg,#fff,#f9f6f1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-top: 60px;
+}
+
+.logo {
+  width: 150px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  color: #b89b5e;
+}
+
+.hero p {
+  color: #666;
+}
+
+.btn-main {
+  margin-top: 25px;
+  padding: 12px 32px;
+  background: #b89b5e;
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.btn-main:hover {
+  background: #a3874c;
+}
+
+/* PRODUCTS */
+
+.products {
+  padding: 100px 20px;
+  text-align: center;
+  background: #fafafa;
+}
+
+.products h2 {
+  color: #b89b5e;
+  margin-bottom: 30px;
+}
+
+.product-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 25px;
+  padding: 20px;
+  scroll-snap-type: x mandatory;
+}
+
+.card {
+  min-width: 260px;
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  scroll-snap-align: center;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.card h3 {
+  margin: 12px 0 5px;
+}
+
+.card p {
+  color: #b89b5e;
+  font-weight: 600;
+}
+
+/* ABOUT */
+
+.about {
+  padding: 90px 20px;
+  text-align: center;
+}
+
+.about h2 {
+  color: #b89b5e;
+  margin-bottom: 20px;
+}
+
+.about p {
+  max-width: 700px;
+  margin: auto;
+  color: #555;
+  line-height: 1.7;
+}
+
+/* FOUNDER */
+
+.founder {
+  padding: 90px 20px;
+  background: #fafafa;
+}
+
+.founder h2 {
+  text-align: center;
+  color: #b89b5e;
+  margin-bottom: 40px;
+}
+
+.founder-box {
+  max-width: 900px;
+  margin: auto;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.founder-box img {
+  width: 220px;
+  border-radius: 50%;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.founder-box h3 {
+  margin-bottom: 10px;
+}
+
+/* INSTAGRAM */
+
+.instagram {
+  padding: 90px 20px;
+  text-align: center;
+}
+
+.instagram h2 {
+  color: #b89b5e;
+  margin-bottom: 25px;
+}
+
+.instagram iframe {
+  width: 350px;
+  height: 450px;
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+/* FOOTER */
+
+footer {
+  background: #111;
+  color: white;
+  text-align: center;
+  padding: 25px;
+  font-size: 14px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .founder-box {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .nav {
+    padding: 15px 20px;
+  }
+
+}
