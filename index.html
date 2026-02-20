@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Seemani | Premium Jewellery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="nav">
+  <h2>SEEMANI</h2>
+  <nav>
+    <a href="#products">Products</a>
+    <a href="#about">About</a>
+    <a href="#founder">Founder</a>
+    <a href="#order">Order</a>
+    <a href="#social">Social</a>
+  </nav>
+</header>
+
+
+<!-- HERO -->
+<section class="hero">
+
+  <img src="assets/logo/logo.jpeg" class="logo" data-aos="zoom-in">
+
+  <h1 data-aos="fade-up">Luxury Jewellery</h1>
+
+  <p data-aos="fade-up">
+    Elegant • Handcrafted • Premium
+  </p>
+
+  <a href="#products" class="btn-main">Explore Collection</a>
+
+</section>
+
+
+<!-- PRODUCTS -->
+<section id="products" class="products">
+
+<h2 data-aos="fade-up">✨ Top Collection ✨</h2>
+
+<div class="product-slider">
+
+  <div class="card" data-aos="fade-up">
+    <img src="assets/products/p1.jpg">
+    <h3>Designer Earrings</h3>
+    <p>₹999</p>
+    <a onclick="orderNow('Designer Earrings')" class="btn-main">Order Now</a>
+  </div>
+
+  <div class="card" data-aos="fade-up">
+    <img src="assets/products/p2.jpg">
+    <h3>Necklace Set</h3>
+    <p>₹1499</p>
+    <a onclick="orderNow('Necklace Set')" class="btn-main">Order Now</a>
+  </div>
+
+  <div class="card" data-aos="fade-up">
+    <img src="assets/products/p3.jpg">
+    <h3>Hair Accessories</h3>
+    <p>₹499</p>
+    <a onclick="orderNow('Hair Accessories')" class="btn-main">Order Now</a>
+  </div>
+
+  <div class="card" data-aos="fade-up">
+    <img src="assets/products/p4.jpg">
+    <h3>Bridal Set</h3>
+    <p>₹2999</p>
+    <a onclick="orderNow('Bridal Set')" class="btn-main">Order Now</a>
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- ABOUT -->
+<section id="about" class="about">
+
+<h2 data-aos="fade-right">About Seemani</h2>
+
+<p data-aos="fade-left">
+Seemani is a premium jewellery brand offering elegant designs,
+crafted for modern women.
+
+We deliver PAN India with quality assurance.
+</p>
+
+</section>
+
+
+<!-- FOUNDER -->
+<section id="founder" class="founder">
+
+<h2 data-aos="fade-up">Meet Our Founder</h2>
+
+<div class="founder-box">
+
+  <img src="assets/founder/founder.jpg" data-aos="zoom-in">
+
+  <div data-aos="fade-left">
+    <h3>Founder Name</h3>
+    <p>
+      Passionate entrepreneur with a vision to
+      bring luxury jewellery to every woman in India.
+    </p>
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- ORDER -->
+<section id="order" class="order-section">
+
+<h2 data-aos="fade-up">✨ Place Your Order ✨</h2>
+
+<form id="orderForm" data-aos="fade-up">
+
+  <input type="text" id="name" placeholder="Your Name" required>
+
+  <input type="tel" id="phone" placeholder="Mobile Number" required>
+
+  <input type="text" id="product" placeholder="Product Name" required>
+
+  <textarea id="address" placeholder="Delivery Address" required></textarea>
+
+  <button type="submit" class="btn-main">
+    Order via WhatsApp
+  </button>
+
+</form>
+
+</section>
+
+
+<!-- INSTAGRAM -->
+<section id="social" class="instagram">
+
+<h2 data-aos="fade-up">Follow Us</h2>
+
+<a href="https://instagram.com/YOURPAGE"
+   class="btn-main"
+   target="_blank">
+   Message Us on Instagram
+</a>
+
+<br><br>
+
+<iframe 
+src="https://www.instagram.com/reel/DU92TGLlA4w/embed"
+width="320"
+height="420"
+frameborder="0"
+allowfullscreen>
+</iframe>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+
+<p>© 2026 Seemani.in | All Rights Reserved</p>
+
+</footer>
+
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
