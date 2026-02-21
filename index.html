@@ -19,6 +19,7 @@
     <a href="#about">About</a>
     <a href="#founder">Founder</a>
     <a href="#social">Instagram</a>
+    <a href="#admin">Admin</a>
   </nav>
 </header>
 
@@ -31,8 +32,8 @@
 <section id="catalog" class="catalog">
   <h2 data-aos="fade-up">Product Catalogue</h2>
   <p class="section-note" data-aos="fade-up">
-    Catalogue is optimized for large inventories (4,000+ products). To update product images, upload files in
-    <code>assets/products/</code> and update paths in <code>script.js</code>.
+    Catalogue is optimized for large inventories (4,000+ products). Source products are stored in
+    <code>assets/products/catalog.json</code>.
   </p>
 
   <div class="catalog-controls" data-aos="fade-up">
@@ -119,6 +120,41 @@
     allowfullscreen
     loading="lazy">
   </iframe>
+</section>
+
+
+<section id="admin" class="admin">
+  <h2 data-aos="fade-up">Admin Panel</h2>
+  <p class="section-note" data-aos="fade-up">
+    Login with hardcoded credentials, then upload a product image and update product details.
+    Submitting the form dispatches a GitHub Action that commits updates back to this repository.
+  </p>
+
+  <div class="admin-box" data-aos="fade-up">
+    <form id="adminLoginForm" class="admin-form">
+      <h3>Admin Login</h3>
+      <input id="adminUsername" type="text" placeholder="Username" required>
+      <input id="adminPassword" type="password" placeholder="Password" required>
+      <button type="submit" class="btn-main">Login</button>
+      <p class="section-note">Demo credentials: <code>admin</code> / <code>admin123</code></p>
+      <p id="adminLoginError" class="admin-error"></p>
+    </form>
+
+    <form id="adminProductForm" class="admin-form" hidden>
+      <h3>Upload Product Update</h3>
+      <input id="adminProductId" type="text" placeholder="Product ID (example: earring-3)" required>
+      <input id="adminProductName" type="text" placeholder="Product Name" required>
+      <input id="adminProductCategory" type="text" placeholder="Category" required>
+      <input id="adminProductPrice" type="number" min="1" placeholder="Price" required>
+      <input id="adminImage" type="file" accept="image/*" required>
+      <input id="githubOwner" type="text" placeholder="GitHub owner (example: your-org)" required>
+      <input id="githubRepo" type="text" placeholder="GitHub repo (example: seemani-dev)" required>
+      <input id="githubBranch" type="text" placeholder="Branch (default: main)">
+      <input id="githubToken" type="password" placeholder="GitHub token (repo + workflow scope)" required>
+      <button type="submit" class="btn-main">Dispatch Upload Workflow</button>
+      <p id="adminStatus" class="section-note"></p>
+    </form>
+  </div>
 </section>
 
 <footer>

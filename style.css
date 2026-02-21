@@ -432,3 +432,47 @@ footer {
     justify-content: space-between;
   }
 }
+
+.card-qty {
+  margin-top: 10px;
+}
+
+.admin {
+  padding: 80px 20px;
+  background: #fafafa;
+}
+
+.admin h2 {
+  text-align: center;
+  color: #b89b5e;
+}
+
+.admin-box {
+  max-width: 760px;
+  margin: 24px auto 0;
+}
+
+.admin-form {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-form h3 {
+  color: #444;
+}
+
+.admin-form input {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: inherit;
+}
+
+.admin-error {
+  color: #c64e4e;
+  font-size: 14px;
+}
