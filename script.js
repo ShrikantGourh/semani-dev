@@ -149,14 +149,34 @@ function addToCart(productId) {
   renderCheckoutSummary();
 }
 
-function removeFromCart(productId) {
+function updateCartQuantity(productId, change) {
   cart = cart
-    .map((item) => (item.id === productId ? { ...item, quantity: item.quantity - 1 } : item))
+    .map((item) => (item.id === productId ? { ...item, quantity: item.quantity + change } : item))
     .filter((item) => item.quantity > 0);
 
   saveCart();
   renderCart();
   renderCheckoutSummary();
+}
+
+function deleteFromCart(productId) {
+  cart = cart.filter((item) => item.id !== productId);
+
+  saveCart();
+  renderCart();
+  renderCheckoutSummary();
+}
+
+function removeFromCart(productId) {
+  updateCartQuantity(productId, -1);
+}
+
+function increaseCartQuantity(productId) {
+  updateCartQuantity(productId, 1);
+}
+
+function decreaseCartQuantity(productId) {
+  updateCartQuantity(productId, -1);
 }
 
 function clearCart() {
@@ -181,13 +201,24 @@ function renderCart() {
   cartItemsEl.innerHTML = "";
 
   if (!cart.length) {
-    cartItemsEl.innerHTML = "<li>Your cart is empty.</li>";
+    cartItemsEl.innerHTML = '<li class="cart-empty">Your cart is empty.</li>';
   } else {
     cart.forEach((item) => {
       const li = document.createElement("li");
       li.innerHTML = `
-        <span>${item.name} × ${item.quantity} <strong>(₹${item.quantity * item.price})</strong></span>
-        <button class="remove-btn" type="button" onclick="removeFromCart('${item.id}')">Remove</button>
+        <div class="cart-line-details">
+          <p class="cart-item-name">${item.name}</p>
+          <p class="cart-item-price">₹${item.price} each</p>
+        </div>
+        <div class="cart-actions">
+          <div class="qty-controls" role="group" aria-label="Quantity controls for ${item.name}">
+            <button class="qty-btn" type="button" onclick="decreaseCartQuantity('${item.id}')" aria-label="Decrease quantity for ${item.name}">−</button>
+            <span class="qty-value">${item.quantity}</span>
+            <button class="qty-btn" type="button" onclick="increaseCartQuantity('${item.id}')" aria-label="Increase quantity for ${item.name}">+</button>
+          </div>
+          <strong class="line-total">₹${item.quantity * item.price}</strong>
+          <button class="remove-btn" type="button" onclick="deleteFromCart('${item.id}')">Delete</button>
+        </div>
       `;
       cartItemsEl.appendChild(li);
     });
