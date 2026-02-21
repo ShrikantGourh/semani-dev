@@ -1,0 +1,10 @@
+[
+  { "id": "earring-1", "name": "Pearl Drop Earrings", "category": "Earrings", "price": 599, "image": "assets/products/pearl-drop-earrings.svg" },
+  { "id": "earring-2", "name": "Stone Hoop Earrings", "category": "Earrings", "price": 699, "image": "assets/products/stone-hoop-earrings.svg" },
+  { "id": "necklace-1", "name": "Kundan Necklace Set", "category": "Necklace", "price": 1599, "image": "assets/products/kundan-necklace-set.svg" },
+  { "id": "necklace-2", "name": "Temple Choker Set", "category": "Necklace", "price": 1799, "image": "assets/products/temple-choker-set.svg" },
+  { "id": "bangle-1", "name": "Mirror Work Bangles", "category": "Bangles", "price": 899, "image": "assets/products/mirror-work-bangles.svg" },
+  { "id": "bangle-2", "name": "Gold Tone Kada", "category": "Bangles", "price": 999, "image": "assets/products/gold-tone-kada.svg" },
+  { "id": "bridal-1", "name": "Bridal Jewellery Combo", "category": "Bridal", "price": 2999, "image": "assets/products/bridal-jewellery-combo.svg" },
+  { "id": "hair-1", "name": "Floral Hair Pins", "category": "Hair Accessory", "price": 499, "image": "assets/products/floral-hair-pins.svg" }
+]
