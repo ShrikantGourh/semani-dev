@@ -31,9 +31,35 @@
 <section id="catalog" class="catalog">
   <h2 data-aos="fade-up">Product Catalogue</h2>
   <p class="section-note" data-aos="fade-up">
-    To update product images, upload new files in <code>assets/products/</code> on GitHub and change the path in <code>script.js</code>.
+    Catalogue is optimized for large inventories (4,000+ products). To update product images, upload files in
+    <code>assets/products/</code> and update paths in <code>script.js</code>.
   </p>
+
+  <div class="catalog-controls" data-aos="fade-up">
+    <input id="searchInput" type="search" placeholder="Search product name...">
+    <select id="categoryFilter" aria-label="Filter by category"></select>
+    <select id="sortSelect" aria-label="Sort products">
+      <option value="featured">Sort: Featured</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="name-asc">Name: A to Z</option>
+      <option value="name-desc">Name: Z to A</option>
+    </select>
+    <select id="pageSizeSelect" aria-label="Products per page">
+      <option value="20">20 / page</option>
+      <option value="40" selected>40 / page</option>
+      <option value="80">80 / page</option>
+    </select>
+  </div>
+
+  <p id="catalogMeta" class="catalog-meta" data-aos="fade-up"></p>
   <div id="productGrid" class="product-grid" data-aos="fade-up"></div>
+
+  <div class="pagination" data-aos="fade-up">
+    <button id="prevPageBtn" class="btn-secondary" type="button">Previous</button>
+    <span id="pageIndicator">Page 1</span>
+    <button id="nextPageBtn" class="btn-secondary" type="button">Next</button>
+  </div>
 </section>
 
 <section id="cart" class="cart-section">

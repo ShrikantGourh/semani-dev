@@ -2,9 +2,7 @@ AOS.init();
 
 const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYMENT_ID/exec";
 
-// Static product catalogue.
-// To update images: upload your own file to assets/products/ and replace image path below.
-const PRODUCT_CATALOG = [
+const BASE_CATALOG = [
   { id: "earring-1", name: "Pearl Drop Earrings", category: "Earrings", price: 599, image: "assets/products/pearl-drop-earrings.svg" },
   { id: "earring-2", name: "Stone Hoop Earrings", category: "Earrings", price: 699, image: "assets/products/stone-hoop-earrings.svg" },
   { id: "necklace-1", name: "Kundan Necklace Set", category: "Necklace", price: 1599, image: "assets/products/kundan-necklace-set.svg" },
@@ -15,35 +13,128 @@ const PRODUCT_CATALOG = [
   { id: "hair-1", name: "Floral Hair Pins", category: "Hair Accessory", price: 499, image: "assets/products/floral-hair-pins.svg" }
 ];
 
+const TARGET_CATALOG_SIZE = 4000;
+
+function buildCatalog(targetSize) {
+  const built = [];
+
+  for (let i = 0; i < targetSize; i += 1) {
+    const base = BASE_CATALOG[i % BASE_CATALOG.length];
+    const variation = Math.floor(i / BASE_CATALOG.length) + 1;
+    const priceOffset = (variation % 5) * 75;
+
+    built.push({
+      id: `${base.id}-${variation}`,
+      name: `${base.name} #${variation}`,
+      category: base.category,
+      price: base.price + priceOffset,
+      image: base.image,
+      featuredOrder: i
+    });
+  }
+
+  return built;
+}
+
+const PRODUCT_CATALOG = buildCatalog(TARGET_CATALOG_SIZE);
+const PRODUCT_BY_ID = new Map(PRODUCT_CATALOG.map((product) => [product.id, product]));
+
+const catalogueState = {
+  query: "",
+  category: "all",
+  sortBy: "featured",
+  page: 1,
+  pageSize: 40
+};
+
+let filteredProducts = PRODUCT_CATALOG;
 let cart = JSON.parse(localStorage.getItem("seemaniCart")) || [];
 
 function saveCart() {
   localStorage.setItem("seemaniCart", JSON.stringify(cart));
 }
 
-function renderProducts() {
-  const grid = document.getElementById("productGrid");
-  grid.innerHTML = "";
+function updateCategoryFilter() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  const categories = [...new Set(PRODUCT_CATALOG.map((product) => product.category))].sort();
 
-  PRODUCT_CATALOG.forEach((product) => {
-    const card = document.createElement("article");
-    card.className = "product-card";
-    card.innerHTML = `
-      <img src="${product.image}" alt="${product.name}">
-      <div class="content">
-        <h3>${product.name}</h3>
-        <p class="meta">${product.category}</p>
-        <p class="price">₹${product.price}</p>
-        <button class="btn-main" onclick="addToCart('${product.id}')">Add to Cart</button>
-      </div>
-    `;
-
-    grid.appendChild(card);
+  categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
   });
 }
 
+function applyFilters() {
+  const query = catalogueState.query.trim().toLowerCase();
+
+  filteredProducts = PRODUCT_CATALOG.filter((product) => {
+    const queryMatch = !query || product.name.toLowerCase().includes(query);
+    const categoryMatch = catalogueState.category === "all" || product.category === catalogueState.category;
+    return queryMatch && categoryMatch;
+  });
+
+  const sorters = {
+    featured: (a, b) => a.featuredOrder - b.featuredOrder,
+    "price-asc": (a, b) => a.price - b.price,
+    "price-desc": (a, b) => b.price - a.price,
+    "name-asc": (a, b) => a.name.localeCompare(b.name),
+    "name-desc": (a, b) => b.name.localeCompare(a.name)
+  };
+
+  filteredProducts.sort(sorters[catalogueState.sortBy]);
+}
+
+function renderProducts() {
+  applyFilters();
+
+  const totalCount = filteredProducts.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / catalogueState.pageSize));
+  catalogueState.page = Math.min(catalogueState.page, totalPages);
+
+  const startIndex = (catalogueState.page - 1) * catalogueState.pageSize;
+  const endIndex = startIndex + catalogueState.pageSize;
+  const pageProducts = filteredProducts.slice(startIndex, endIndex);
+
+  const grid = document.getElementById("productGrid");
+  const meta = document.getElementById("catalogMeta");
+  const pageIndicator = document.getElementById("pageIndicator");
+  const prevBtn = document.getElementById("prevPageBtn");
+  const nextBtn = document.getElementById("nextPageBtn");
+
+  grid.innerHTML = "";
+
+  if (!pageProducts.length) {
+    grid.innerHTML = "<p>No products found. Try a different search or filter.</p>";
+  } else {
+    pageProducts.forEach((product) => {
+      const card = document.createElement("article");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <div class="content">
+          <h3>${product.name}</h3>
+          <p class="meta">${product.category}</p>
+          <p class="price">₹${product.price}</p>
+          <button class="btn-main" type="button" onclick="addToCart('${product.id}')">Add to Cart</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  const pageStart = totalCount === 0 ? 0 : startIndex + 1;
+  const pageEnd = Math.min(endIndex, totalCount);
+  meta.textContent = `Showing ${pageStart}-${pageEnd} of ${totalCount} products`;
+  pageIndicator.textContent = `Page ${catalogueState.page} of ${totalPages}`;
+  prevBtn.disabled = catalogueState.page <= 1;
+  nextBtn.disabled = catalogueState.page >= totalPages;
+}
+
 function addToCart(productId) {
-  const product = PRODUCT_CATALOG.find((item) => item.id === productId);
+  const product = PRODUCT_BY_ID.get(productId);
   if (!product) return;
 
   const existing = cart.find((item) => item.id === product.id);
@@ -90,13 +181,13 @@ function renderCart() {
   cartItemsEl.innerHTML = "";
 
   if (!cart.length) {
-    cartItemsEl.innerHTML = '<li>Your cart is empty.</li>';
+    cartItemsEl.innerHTML = "<li>Your cart is empty.</li>";
   } else {
     cart.forEach((item) => {
       const li = document.createElement("li");
       li.innerHTML = `
         <span>${item.name} × ${item.quantity} <strong>(₹${item.quantity * item.price})</strong></span>
-        <button class="remove-btn" onclick="removeFromCart('${item.id}')">Remove</button>
+        <button class="remove-btn" type="button" onclick="removeFromCart('${item.id}')">Remove</button>
       `;
       cartItemsEl.appendChild(li);
     });
@@ -138,6 +229,61 @@ async function submitToGoogleSheet(orderPayload) {
   });
 }
 
+function setupCatalogControls() {
+  const searchInput = document.getElementById("searchInput");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const sortSelect = document.getElementById("sortSelect");
+  const pageSizeSelect = document.getElementById("pageSizeSelect");
+  const prevPageBtn = document.getElementById("prevPageBtn");
+  const nextPageBtn = document.getElementById("nextPageBtn");
+
+  let searchTimer;
+
+  searchInput.addEventListener("input", (event) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      catalogueState.query = event.target.value;
+      catalogueState.page = 1;
+      renderProducts();
+    }, 150);
+  });
+
+  categoryFilter.addEventListener("change", (event) => {
+    catalogueState.category = event.target.value;
+    catalogueState.page = 1;
+    renderProducts();
+  });
+
+  sortSelect.addEventListener("change", (event) => {
+    catalogueState.sortBy = event.target.value;
+    catalogueState.page = 1;
+    renderProducts();
+  });
+
+  pageSizeSelect.addEventListener("change", (event) => {
+    catalogueState.pageSize = Number(event.target.value);
+    catalogueState.page = 1;
+    renderProducts();
+  });
+
+  prevPageBtn.addEventListener("click", () => {
+    if (catalogueState.page > 1) {
+      catalogueState.page -= 1;
+      renderProducts();
+      document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  nextPageBtn.addEventListener("click", () => {
+    const totalPages = Math.max(1, Math.ceil(filteredProducts.length / catalogueState.pageSize));
+    if (catalogueState.page < totalPages) {
+      catalogueState.page += 1;
+      renderProducts();
+      document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+}
+
 document.getElementById("orderForm").addEventListener("submit", async function (event) {
   event.preventDefault();
 
@@ -167,6 +313,8 @@ document.getElementById("orderForm").addEventListener("submit", async function (
   }
 });
 
+updateCategoryFilter();
+setupCatalogControls();
 renderProducts();
 renderCart();
 renderCheckoutSummary();
