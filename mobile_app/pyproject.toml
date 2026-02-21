@@ -1,0 +1,44 @@
+[build-system]
+requires = ["briefcase>=0.3.18"]
+build-backend = "briefcase.build"
+
+[project]
+name = "Semani Mobile"
+version = "0.0.1"
+description = "Android and iOS wrapper app for the Semani website"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  {name = "Semani Dev Team", email = "dev@semani.local"}
+]
+license = {text = "MIT"}
+dependencies = [
+  "toga>=0.4.6",
+]
+
+[tool.briefcase]
+project_name = "Semani Mobile"
+bundle = "com.semani"
+version = "0.0.1"
+url = "https://example.com"
+license = "MIT"
+author = "Semani Dev Team"
+author_email = "dev@semani.local"
+
+[tool.briefcase.app.semanimobile]
+formal_name = "Semani Mobile"
+description = "Android and iOS app that opens the Semani website"
+long_description = "A lightweight native app shell for Android and iPhone that displays the Semani website using a native web view."
+sources = [
+  "src/semani_mobile_app",
+]
+test_sources = []
+requires = [
+  "toga>=0.4.6",
+]
+
+[tool.briefcase.app.semanimobile.android]
+requires = []
+
+[tool.briefcase.app.semanimobile.iOS]
+requires = []
