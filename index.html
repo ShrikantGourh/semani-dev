@@ -1,183 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Seemani | Premium Jewellery</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Seemani | Artificial Jewellery Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- NAVBAR -->
 <header class="nav">
   <h2>SEEMANI</h2>
   <nav>
-    <a href="#products">Products</a>
+    <a href="#catalog">Catalogue</a>
+    <a href="#cart">Cart</a>
+    <a href="#checkout">Checkout</a>
     <a href="#about">About</a>
     <a href="#founder">Founder</a>
-    <a href="#order">Order</a>
-    <a href="#social">Social</a>
+    <a href="#social">Instagram</a>
   </nav>
 </header>
 
-
-<!-- HERO -->
 <section class="hero">
+  <h1 data-aos="fade-up">Artificial Jewellery E-Commerce</h1>
+  <p data-aos="fade-up">Affordable • Stylish • Ready to Ship</p>
+  <a href="#catalog" class="btn-main">Shop Now</a>
+</section>
 
-  <img src="assets/logo/logo.jpeg" class="logo" data-aos="zoom-in">
-
-  <h1 data-aos="fade-up">Luxury Jewellery</h1>
-
-  <p data-aos="fade-up">
-    Elegant • Handcrafted • Premium
+<section id="catalog" class="catalog">
+  <h2 data-aos="fade-up">Product Catalogue</h2>
+  <p class="section-note" data-aos="fade-up">
+    Catalogue is optimized for large inventories (4,000+ products). To update product images, upload files in
+    <code>assets/products/</code> and update paths in <code>script.js</code>.
   </p>
 
-  <a href="#products" class="btn-main">Explore Collection</a>
+  <div class="catalog-controls" data-aos="fade-up">
+    <input id="searchInput" type="search" placeholder="Search product name...">
+    <select id="categoryFilter" aria-label="Filter by category"></select>
+    <select id="sortSelect" aria-label="Sort products">
+      <option value="featured">Sort: Featured</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="name-asc">Name: A to Z</option>
+      <option value="name-desc">Name: Z to A</option>
+    </select>
+    <select id="pageSizeSelect" aria-label="Products per page">
+      <option value="20">20 / page</option>
+      <option value="40" selected>40 / page</option>
+      <option value="80">80 / page</option>
+    </select>
+  </div>
 
+  <p id="catalogMeta" class="catalog-meta" data-aos="fade-up"></p>
+  <div id="productGrid" class="product-grid" data-aos="fade-up"></div>
+
+  <div class="pagination" data-aos="fade-up">
+    <button id="prevPageBtn" class="btn-secondary" type="button">Previous</button>
+    <span id="pageIndicator">Page 1</span>
+    <button id="nextPageBtn" class="btn-secondary" type="button">Next</button>
+  </div>
 </section>
 
-
-<!-- PRODUCTS -->
-<section id="products" class="products">
-
-<h2 data-aos="fade-up">✨ Top Collection ✨</h2>
-
-<div class="product-slider">
-
-  <div class="card" data-aos="fade-up">
-    <img src="assets/products/p1.jpg">
-    <h3>Designer Earrings</h3>
-    <p>₹999</p>
-    <a onclick="orderNow('Designer Earrings')" class="btn-main">Order Now</a>
+<section id="cart" class="cart-section">
+  <h2 data-aos="fade-up">Your Cart</h2>
+  <div class="cart-wrapper" data-aos="fade-up">
+    <ul id="cartItems" class="cart-items"></ul>
+    <div class="cart-summary">
+      <p>Items: <span id="cartCount">0</span></p>
+      <p>Total: ₹<span id="cartTotal">0</span></p>
+      <button class="btn-main" onclick="goToCheckout()">Proceed to Checkout</button>
+      <button class="btn-secondary" onclick="clearCart()">Clear Cart</button>
+    </div>
   </div>
-
-  <div class="card" data-aos="fade-up">
-    <img src="assets/products/p2.jpg">
-    <h3>Necklace Set</h3>
-    <p>₹1499</p>
-    <a onclick="orderNow('Necklace Set')" class="btn-main">Order Now</a>
-  </div>
-
-  <div class="card" data-aos="fade-up">
-    <img src="assets/products/p3.jpg">
-    <h3>Hair Accessories</h3>
-    <p>₹499</p>
-    <a onclick="orderNow('Hair Accessories')" class="btn-main">Order Now</a>
-  </div>
-
-  <div class="card" data-aos="fade-up">
-    <img src="assets/products/p4.jpg">
-    <h3>Bridal Set</h3>
-    <p>₹2999</p>
-    <a onclick="orderNow('Bridal Set')" class="btn-main">Order Now</a>
-  </div>
-
-</div>
-
 </section>
 
+<section id="checkout" class="checkout-section">
+  <h2 data-aos="fade-up">Checkout</h2>
+  <form id="orderForm" data-aos="fade-up">
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="tel" id="phone" placeholder="Mobile Number" required>
+    <textarea id="address" placeholder="Delivery Address" required></textarea>
+    <div id="checkoutProducts" class="checkout-products"></div>
+    <button type="submit" class="btn-main">Place Order</button>
+  </form>
+</section>
 
-<!-- ABOUT -->
 <section id="about" class="about">
-
-<h2 data-aos="fade-right">About Seemani</h2>
-
-<p data-aos="fade-left">
-Seemani is a premium jewellery brand offering elegant designs,
-crafted for modern women.
-
-We deliver PAN India with quality assurance.
-</p>
-
+  <h2>About Seemani</h2>
+  <p>
+    Seemani is a static e-commerce showcase for artificial jewellery with a simple cart and checkout flow.
+    This setup is easy to maintain directly from GitHub.
+  </p>
 </section>
 
-
-<!-- FOUNDER -->
 <section id="founder" class="founder">
-
-<h2 data-aos="fade-up">Meet Our Founder</h2>
-
-<div class="founder-box">
-
-  <img src="assets/founder/founder.jpg" data-aos="zoom-in">
-
-  <div data-aos="fade-left">
-    <h3>Founder Name</h3>
-    <p>
-      Passionate entrepreneur with a vision to
-      bring luxury jewellery to every woman in India.
-    </p>
+  <h2 data-aos="fade-up">Meet Our Founder</h2>
+  <div class="founder-box" data-aos="fade-up">
+    <div class="founder-photo">Founder</div>
+    <div>
+      <h3>Seemani Founder</h3>
+      <p>
+        Passionate about making beautiful artificial jewellery accessible for every occasion,
+        with a focus on quality, trend, and affordability.
+      </p>
+    </div>
   </div>
-
-</div>
-
 </section>
 
-
-<!-- ORDER -->
-<section id="order" class="order-section">
-
-<h2 data-aos="fade-up">✨ Place Your Order ✨</h2>
-
-<form id="orderForm" data-aos="fade-up">
-
-  <input type="text" id="name" placeholder="Your Name" required>
-
-  <input type="tel" id="phone" placeholder="Mobile Number" required>
-
-  <input type="text" id="product" placeholder="Product Name" required>
-
-  <textarea id="address" placeholder="Delivery Address" required></textarea>
-
-  <button type="submit" class="btn-main">
-    Order via WhatsApp
-  </button>
-
-</form>
-
-</section>
-
-
-<!-- INSTAGRAM -->
 <section id="social" class="instagram">
-
-<h2 data-aos="fade-up">Follow Us</h2>
-
-<a href="https://instagram.com/YOURPAGE"
-   class="btn-main"
-   target="_blank">
-   Message Us on Instagram
-</a>
-
-<br><br>
-
-<iframe 
-src="https://www.instagram.com/reel/DU92TGLlA4w/embed"
-width="320"
-height="420"
-frameborder="0"
-allowfullscreen>
-</iframe>
-
+  <h2 data-aos="fade-up">Instagram Reels</h2>
+  <p class="section-note" data-aos="fade-up">Watch our latest jewellery styling reel.</p>
+  <iframe
+    src="https://www.instagram.com/reel/DU92TGLlA4w/embed"
+    width="320"
+    height="420"
+    frameborder="0"
+    allowfullscreen
+    loading="lazy">
+  </iframe>
 </section>
 
-
-<!-- FOOTER -->
 <footer>
-
-<p>© 2026 Seemani.in | All Rights Reserved</p>
-
+  <p>© 2026 Seemani.in | All Rights Reserved</p>
 </footer>
-
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
