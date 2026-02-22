@@ -1,9 +1,8 @@
 AOS.init();
 
-const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYMENT_ID/exec";
+const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzF4A6XBvsApmRnVX8hxjkRsflbA-n70Mvdc2hWxUN-bukf2-I0vWzpPynWjBlznOFS5Q/exec";
 const CATALOG_URL = "assets/products/catalog.json";
 const TARGET_CATALOG_SIZE = 4000;
-const ADMIN_CREDENTIALS = { username: "admin", password: "admin123" };
 
 const catalogueState = {
   query: "",
@@ -281,17 +280,22 @@ function goToCheckout() {
 }
 
 async function submitToGoogleSheet(orderPayload) {
-  if (GOOGLE_SHEET_WEB_APP_URL.includes("REPLACE_WITH_YOUR_DEPLOYMENT_ID")) {
-    console.warn("Google Sheet API URL not configured. Update GOOGLE_SHEET_WEB_APP_URL in script.js");
-    return;
-  }
+  const hiddenForm = document.createElement("form");
+  hiddenForm.method = "POST";
+  hiddenForm.action = GOOGLE_SHEET_WEB_APP_URL;
+  hiddenForm.target = "hidden_iframe";
 
-  await fetch(GOOGLE_SHEET_WEB_APP_URL, {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(orderPayload)
+  Object.entries(orderPayload).forEach(([key, value]) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;
+    input.value = String(value);
+    hiddenForm.appendChild(input);
   });
+
+  document.body.appendChild(hiddenForm);
+  hiddenForm.submit();
+  hiddenForm.remove();
 }
 
 function setupCatalogControls() {
@@ -362,146 +366,38 @@ function setupCheckoutForm() {
       return;
     }
 
+    const customerName = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const orderStatus = document.getElementById("orderStatus");
+    const productLine = cart.map((item) => `${item.name} x ${item.quantity}`).join(", ");
+
     const orderPayload = {
-      orderId: `SM-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      customerName: document.getElementById("name").value.trim(),
-      phone: document.getElementById("phone").value.trim(),
-      address: document.getElementById("address").value.trim(),
-      items: cart,
-      total: getCartTotals().total
+      name: customerName,
+      phone,
+      product: productLine,
+      address
     };
 
     try {
       await submitToGoogleSheet(orderPayload);
-      alert("Order placed successfully.");
+      if (orderStatus) {
+        orderStatus.textContent = "✅ Order Submitted Successfully!";
+      }
       clearCart();
       this.reset();
     } catch (error) {
       console.error(error);
-      alert("Order failed. Please try again.");
+      if (orderStatus) {
+        orderStatus.textContent = "Order failed. Please try again.";
+      }
     }
-  });
-}
-
-function sanitizeFileName(fileName) {
-  return fileName.toLowerCase().replace(/[^a-z0-9.-]+/g, "-");
-}
-
-function readFileAsBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = String(reader.result || "");
-      resolve(result.split(",").pop() || "");
-    };
-    reader.onerror = () => reject(new Error("Unable to read image file."));
-    reader.readAsDataURL(file);
-  });
-}
-
-function setupAdminPanel() {
-  const loginForm = document.getElementById("adminLoginForm");
-  const loginError = document.getElementById("adminLoginError");
-  const productForm = document.getElementById("adminProductForm");
-  const uploadInput = document.getElementById("adminImage");
-  if (!loginForm || !loginError || !productForm || !uploadInput) return;
-
-  loginForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const username = document.getElementById("adminUsername").value.trim();
-    const password = document.getElementById("adminPassword").value;
-
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-      productForm.hidden = false;
-      loginError.textContent = "";
-      loginForm.hidden = true;
-    } else {
-      loginError.textContent = "Invalid username/password.";
-    }
-  });
-
-  productForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const githubToken = document.getElementById("githubToken").value.trim();
-    const owner = document.getElementById("githubOwner").value.trim();
-    const repo = document.getElementById("githubRepo").value.trim();
-    const branch = document.getElementById("githubBranch").value.trim() || "main";
-    const status = document.getElementById("adminStatus");
-
-    if (!githubToken || !owner || !repo) {
-      status.textContent = "GitHub token, owner and repo are required.";
-      return;
-    }
-
-    const file = uploadInput.files[0];
-    if (!file) {
-      status.textContent = "Please choose an image file.";
-      return;
-    }
-
-    const productId = document.getElementById("adminProductId").value.trim();
-    const productName = document.getElementById("adminProductName").value.trim();
-    const productCategory = document.getElementById("adminProductCategory").value.trim();
-    const productPrice = Number(document.getElementById("adminProductPrice").value);
-
-    if (!productId || !productName || !productCategory || !productPrice) {
-      status.textContent = "Fill all product fields before upload.";
-      return;
-    }
-
-    const fileBase64 = await readFileAsBase64(file);
-    const imageFileName = sanitizeFileName(file.name);
-
-    const updatedBase = baseCatalog.filter((item) => item.id !== productId);
-    updatedBase.push({
-      id: productId,
-      name: productName,
-      category: productCategory,
-      price: productPrice,
-      image: `assets/products/${imageFileName}`
-    });
-
-    status.textContent = "Triggering GitHub Action...";
-
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/admin-content-update.yml/dispatches`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${githubToken}`,
-        Accept: "application/vnd.github+json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        ref: branch,
-        inputs: {
-          image_name: imageFileName,
-          image_base64: fileBase64,
-          catalog_json: JSON.stringify(updatedBase)
-        }
-      })
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      status.textContent = `Upload failed: ${errorText}`;
-      return;
-    }
-
-    baseCatalog = updatedBase;
-    refreshCatalogData();
-    updateCategoryFilter();
-    renderProducts();
-
-    status.textContent = "Workflow dispatched. GitHub Actions will commit image and catalog.json.";
-    productForm.reset();
   });
 }
 
 async function initializeApp() {
   try {
-    const needsCatalog = Boolean(document.getElementById("productGrid") || document.getElementById("adminProductForm"));
+    const needsCatalog = Boolean(document.getElementById("productGrid"));
 
     if (needsCatalog) {
       baseCatalog = await loadBaseCatalog();
@@ -511,7 +407,6 @@ async function initializeApp() {
 
     setupCatalogControls();
     setupCheckoutForm();
-    setupAdminPanel();
     renderProducts();
     renderCart();
     renderCheckoutSummary();
