@@ -65,6 +65,8 @@ function saveCart() {
 
 function updateCategoryFilter() {
   const categoryFilter = document.getElementById("categoryFilter");
+  if (!categoryFilter) return;
+
   const categories = [...new Set(productCatalog.map((product) => product.category))].sort();
 
   categoryFilter.innerHTML = '<option value="all">All Categories</option>';
@@ -97,6 +99,14 @@ function applyFilters() {
 }
 
 function renderProducts() {
+  const grid = document.getElementById("productGrid");
+  const meta = document.getElementById("catalogMeta");
+  const pageIndicator = document.getElementById("pageIndicator");
+  const prevBtn = document.getElementById("prevPageBtn");
+  const nextBtn = document.getElementById("nextPageBtn");
+
+  if (!grid || !meta || !pageIndicator || !prevBtn || !nextBtn) return;
+
   applyFilters();
 
   const totalCount = filteredProducts.length;
@@ -106,12 +116,6 @@ function renderProducts() {
   const startIndex = (catalogueState.page - 1) * catalogueState.pageSize;
   const endIndex = startIndex + catalogueState.pageSize;
   const pageProducts = filteredProducts.slice(startIndex, endIndex);
-
-  const grid = document.getElementById("productGrid");
-  const meta = document.getElementById("catalogMeta");
-  const pageIndicator = document.getElementById("pageIndicator");
-  const prevBtn = document.getElementById("prevPageBtn");
-  const nextBtn = document.getElementById("nextPageBtn");
 
   grid.innerHTML = "";
 
@@ -222,6 +226,7 @@ function renderCart() {
   const cartItemsEl = document.getElementById("cartItems");
   const cartCountEl = document.getElementById("cartCount");
   const cartTotalEl = document.getElementById("cartTotal");
+  if (!cartItemsEl || !cartCountEl || !cartTotalEl) return;
 
   cartItemsEl.innerHTML = "";
 
@@ -256,6 +261,8 @@ function renderCart() {
 
 function renderCheckoutSummary() {
   const summaryEl = document.getElementById("checkoutProducts");
+  if (!summaryEl) return;
+
   const { total } = getCartTotals();
 
   if (!cart.length) {
@@ -268,7 +275,9 @@ function renderCheckoutSummary() {
 }
 
 function goToCheckout() {
-  document.getElementById("checkout").scrollIntoView({ behavior: "smooth" });
+  const checkoutSection = document.getElementById("checkout");
+  if (!checkoutSection) return;
+  checkoutSection.scrollIntoView({ behavior: "smooth" });
 }
 
 async function submitToGoogleSheet(orderPayload) {
@@ -292,6 +301,7 @@ function setupCatalogControls() {
   const pageSizeSelect = document.getElementById("pageSizeSelect");
   const prevPageBtn = document.getElementById("prevPageBtn");
   const nextPageBtn = document.getElementById("nextPageBtn");
+  if (!searchInput || !categoryFilter || !sortSelect || !pageSizeSelect || !prevPageBtn || !nextPageBtn) return;
 
   let searchTimer;
 
@@ -326,7 +336,7 @@ function setupCatalogControls() {
     if (catalogueState.page > 1) {
       catalogueState.page -= 1;
       renderProducts();
-      document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   });
 
@@ -335,13 +345,16 @@ function setupCatalogControls() {
     if (catalogueState.page < totalPages) {
       catalogueState.page += 1;
       renderProducts();
-      document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   });
 }
 
 function setupCheckoutForm() {
-  document.getElementById("orderForm").addEventListener("submit", async function onSubmit(event) {
+  const orderForm = document.getElementById("orderForm");
+  if (!orderForm) return;
+
+  orderForm.addEventListener("submit", async function onSubmit(event) {
     event.preventDefault();
 
     if (!cart.length) {
@@ -392,6 +405,7 @@ function setupAdminPanel() {
   const loginError = document.getElementById("adminLoginError");
   const productForm = document.getElementById("adminProductForm");
   const uploadInput = document.getElementById("adminImage");
+  if (!loginForm || !loginError || !productForm || !uploadInput) return;
 
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -487,9 +501,14 @@ function setupAdminPanel() {
 
 async function initializeApp() {
   try {
-    baseCatalog = await loadBaseCatalog();
-    refreshCatalogData();
-    updateCategoryFilter();
+    const needsCatalog = Boolean(document.getElementById("productGrid") || document.getElementById("adminProductForm"));
+
+    if (needsCatalog) {
+      baseCatalog = await loadBaseCatalog();
+      refreshCatalogData();
+      updateCategoryFilter();
+    }
+
     setupCatalogControls();
     setupCheckoutForm();
     setupAdminPanel();
@@ -498,7 +517,10 @@ async function initializeApp() {
     renderCheckoutSummary();
   } catch (error) {
     console.error(error);
-    document.getElementById("catalogMeta").textContent = "Failed to load catalogue. Please check assets/products/catalog.json.";
+    const catalogMeta = document.getElementById("catalogMeta");
+    if (catalogMeta) {
+      catalogMeta.textContent = "Failed to load catalogue. Please check assets/products/catalog.json.";
+    }
   }
 }
 
