@@ -39,7 +39,20 @@ body {
   font-weight: 500;
 }
 
+.nav-cart-btn {
+  border: none;
+  background: transparent;
+  color: #444;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .nav a:hover {
+  color: #b89b5e;
+}
+
+.nav-cart-btn:hover {
   color: #b89b5e;
 }
 
@@ -219,6 +232,10 @@ body {
   gap: 20px;
 }
 
+.cart-hidden {
+  display: none;
+}
+
 .cart-items,
 .cart-summary,
 .checkout-products {
@@ -301,6 +318,25 @@ body {
 
 .cart-summary {
   padding: 16px;
+}
+
+.coupon-row {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.coupon-row input {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: inherit;
+}
+
+.coupon-row .btn-secondary {
+  margin-top: 0;
+  padding: 10px 14px;
 }
 
 .remove-btn {

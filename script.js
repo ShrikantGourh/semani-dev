@@ -294,6 +294,7 @@ function renderProducts() {
     grid.innerHTML = "<p>No products found. Try a different search or filter.</p>";
   } else {
     pageProducts.forEach((product) => {
+      const cartQty = getCartQuantityForProduct(product.id);
       const card = document.createElement("article");
       card.className = "product-card";
       card.innerHTML = `
@@ -303,12 +304,15 @@ function renderProducts() {
           <p class="meta">${product.category}${product.type ? ` • ${product.type}` : ""}</p>
           <p class="meta">SKU: ${product.sku}</p>
           <p class="price">₹${product.price}</p>
-          <div class="qty-controls card-qty" role="group" aria-label="Quantity picker for ${product.name}">
-            <button class="qty-btn" type="button" onclick="changeCardQuantity('${product.id}', -1)">−</button>
-            <span class="qty-value" id="qty-${product.id}">1</span>
-            <button class="qty-btn" type="button" onclick="changeCardQuantity('${product.id}', 1)">+</button>
-          </div>
-          <button class="btn-main" type="button" onclick="addToCart('${product.id}')">Add to Cart</button>
+          ${
+            cartQty > 0
+              ? `<div class="qty-controls card-qty" role="group" aria-label="Quantity picker for ${product.name}">
+                   <button class="qty-btn" type="button" onclick="changeProductCardCartQuantity('${product.id}', -1)">−</button>
+                   <span class="qty-value" id="qty-${product.id}">${cartQty}</span>
+                   <button class="qty-btn" type="button" onclick="changeProductCardCartQuantity('${product.id}', 1)">+</button>
+                 </div>`
+              : `<button class="btn-main" type="button" onclick="addToCart('${product.id}')">Add to Cart</button>`
+          }
         </div>
       `;
       grid.appendChild(card);
@@ -323,35 +327,31 @@ function renderProducts() {
   nextBtn.disabled = catalogueState.page >= totalPages;
 }
 
-function getCardQuantity(productId) {
-  const quantityEl = document.getElementById(`qty-${productId}`);
-  if (!quantityEl) return 1;
-  const parsed = Number(quantityEl.textContent);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
-}
-
-function changeCardQuantity(productId, delta) {
-  const quantityEl = document.getElementById(`qty-${productId}`);
-  if (!quantityEl) return;
-  const current = getCardQuantity(productId);
-  quantityEl.textContent = Math.max(1, current + delta);
+function getCartQuantityForProduct(productId) {
+  const existing = cart.find((item) => item.id === productId);
+  return existing ? existing.quantity : 0;
 }
 
 function addToCart(productId) {
   const product = productById.get(productId);
   if (!product) return;
 
-  const quantityToAdd = getCardQuantity(productId);
   const existing = cart.find((item) => item.id === product.id);
   if (existing) {
-    existing.quantity += quantityToAdd;
+    existing.quantity += 1;
   } else {
-    cart.push({ ...product, quantity: quantityToAdd });
+    cart.push({ ...product, quantity: 1 });
   }
 
   saveCart();
+  updateCartToggleCount();
   renderCart();
   renderCheckoutSummary();
+  renderProducts();
+}
+
+function changeProductCardCartQuantity(productId, change) {
+  updateCartQuantity(productId, change);
 }
 
 function updateCartQuantity(productId, change) {
@@ -360,16 +360,20 @@ function updateCartQuantity(productId, change) {
     .filter((item) => item.quantity > 0);
 
   saveCart();
+  updateCartToggleCount();
   renderCart();
   renderCheckoutSummary();
+  renderProducts();
 }
 
 function deleteFromCart(productId) {
   cart = cart.filter((item) => item.id !== productId);
 
   saveCart();
+  updateCartToggleCount();
   renderCart();
   renderCheckoutSummary();
+  renderProducts();
 }
 
 function increaseCartQuantity(productId) {
@@ -383,8 +387,10 @@ function decreaseCartQuantity(productId) {
 function clearCart() {
   cart = [];
   saveCart();
+  updateCartToggleCount();
   renderCart();
   renderCheckoutSummary();
+  renderProducts();
 }
 
 function getCartTotals() {
@@ -429,6 +435,44 @@ function renderCart() {
   const totals = getCartTotals();
   cartCountEl.textContent = totals.count;
   cartTotalEl.textContent = totals.total;
+}
+
+function updateCartToggleCount() {
+  const cartToggleBtn = document.getElementById("cartToggleBtn");
+  if (!cartToggleBtn) return;
+  const { count } = getCartTotals();
+  cartToggleBtn.textContent = `Cart (${count})`;
+}
+
+function toggleCartVisibility() {
+  const cartSection = document.getElementById("cart");
+  if (!cartSection) return;
+  const isHidden = cartSection.classList.contains("cart-hidden");
+  cartSection.classList.toggle("cart-hidden", !isHidden);
+  cartSection.setAttribute("aria-hidden", String(!isHidden));
+
+  if (isHidden) {
+    cartSection.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
+function setupCartTools() {
+  const cartToggleBtn = document.getElementById("cartToggleBtn");
+  const pasteCouponBtn = document.getElementById("pasteCouponBtn");
+  const couponInput = document.getElementById("couponInput");
+
+  cartToggleBtn?.addEventListener("click", toggleCartVisibility);
+
+  pasteCouponBtn?.addEventListener("click", async () => {
+    if (!couponInput) return;
+    try {
+      const text = await navigator.clipboard.readText();
+      couponInput.value = text.trim();
+    } catch (error) {
+      console.error(error);
+      alert("Clipboard access failed. Please paste coupon manually.");
+    }
+  });
 }
 
 function renderCheckoutSummary() {
@@ -594,10 +638,12 @@ async function initializeApp() {
     }
 
     setupCatalogControls();
+    setupCartTools();
     setupCheckoutForm();
     renderProducts();
     renderCart();
     renderCheckoutSummary();
+    updateCartToggleCount();
   } catch (error) {
     console.error(error);
     const catalogMeta = document.getElementById("catalogMeta");
@@ -612,7 +658,7 @@ initializeApp();
 window.goToCheckout = goToCheckout;
 window.clearCart = clearCart;
 window.addToCart = addToCart;
-window.changeCardQuantity = changeCardQuantity;
+window.changeProductCardCartQuantity = changeProductCardCartQuantity;
 window.increaseCartQuantity = increaseCartQuantity;
 window.decreaseCartQuantity = decreaseCartQuantity;
 window.deleteFromCart = deleteFromCart;
