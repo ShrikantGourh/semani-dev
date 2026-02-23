@@ -238,25 +238,6 @@ function getProductAssetImageCandidates(sku) {
   return candidates;
 }
 
-function buildWhatsAppOrderMessage(orderPayload) {
-  const { name, phone, address, product } = orderPayload;
-  return [
-    "Hello Seemani, new order placed:",
-    `Name: ${name}`,
-    `Phone: ${phone}`,
-    `Address: ${address}`,
-    `Products: ${product}`
-  ].join("\n");
-}
-
-function openWhatsAppChannelWithOrder(orderPayload) {
-  const message = buildWhatsAppOrderMessage(orderPayload);
-  const hasQuery = WHATSAPP_CHANNEL_URL.includes("?");
-  const separator = hasQuery ? "&" : "?";
-  const url = `${WHATSAPP_CHANNEL_URL}${separator}text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank", "noopener,noreferrer");
-}
-
 async function imageExists(url) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -997,9 +978,8 @@ function setupCheckoutForm() {
 
     try {
       await submitToGoogleSheet(orderPayload);
-      openWhatsAppChannelWithOrder(orderPayload);
       if (orderStatus) {
-        orderStatus.innerHTML = `✅ Order submitted successfully! <a href="${WHATSAPP_CHANNEL_URL}" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>`;
+        orderStatus.textContent = "✅ Order submitted successfully!";
       }
       clearCart();
       this.reset();
