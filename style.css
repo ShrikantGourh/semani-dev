@@ -74,6 +74,19 @@ body.modal-open {
   cursor: pointer;
 }
 
+.nav-menu-toggle {
+  display: none;
+  border: 1px solid #e7dcc1;
+  background: #fff;
+  color: #7a5f2b;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .nav a {
   text-decoration: none;
   color: #444;
@@ -760,6 +773,44 @@ footer {
     border-radius: 10px;
     padding: 8px 10px;
     background: #fff;
+  }
+
+  .nav-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav nav {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 16px;
+    width: min(240px, calc(100vw - 32px));
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+  }
+
+  .nav.nav-open nav {
+    display: flex;
+  }
+
+  .nav nav a,
+  .nav nav .nav-cart-btn {
+    padding: 10px;
+    border-radius: 8px;
+    text-align: left;
+  }
+
+  .nav nav a:hover,
+  .nav nav .nav-cart-btn:hover {
+    background: #f8f3e8;
   }
 
   .catalog-controls {
