@@ -145,7 +145,6 @@ body.modal-open {
 .catalog,
 .cart-section,
 .checkout-section,
-.about,
 .founder,
 .instagram {
   padding: 80px 20px;
@@ -160,7 +159,6 @@ body.modal-open {
 .catalog h2,
 .cart-section h2,
 .checkout-section h2,
-.about h2,
 .founder h2,
 .instagram h2 {
   text-align: center;
@@ -439,14 +437,6 @@ body.modal-open {
   padding: 14px;
   color: #555;
   text-align: left;
-}
-
-.about p {
-  margin: 14px auto 0;
-  max-width: 760px;
-  text-align: center;
-  color: #555;
-  line-height: 1.7;
 }
 
 .founder-box {
