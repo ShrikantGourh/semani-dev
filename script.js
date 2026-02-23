@@ -471,17 +471,21 @@ function buildProductGallery(images, productName) {
 }
 
 function buildProductReels(reels) {
+  const multipleReels = reels.length > 1;
+
   return reels
     .map(
       (reel) => `
-      <article class="reel-card">
+      <article class="reel-card${multipleReels ? " reel-card-multiple" : " reel-card-single"}">
         <h4>${reel.title || "Product Reel"}</h4>
-        <iframe
-          src="${reel.embedUrl}"
-          loading="lazy"
-          allowfullscreen
-          title="${reel.title || "Product Reel"}">
-        </iframe>
+        <div class="reel-embed-wrap">
+          <iframe
+            src="${reel.embedUrl}"
+            loading="lazy"
+            allowfullscreen
+            title="${reel.title || "Product Reel"}">
+          </iframe>
+        </div>
       </article>
     `
     )
@@ -525,7 +529,7 @@ async function openProductDetail(productId) {
     </div>
     <div class="product-reels-wrap">
       <h3>Style Reels for this Product</h3>
-      <div class="product-reels-grid">
+      <div class="product-reels-grid ${reels.length > 1 ? "product-reels-grid-multiple" : "product-reels-grid-single"}">
         ${buildProductReels(reels)}
       </div>
     </div>
