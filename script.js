@@ -1021,6 +1021,42 @@ function setupWhatsAppChatLinks() {
   });
 }
 
+function setupMobileNavMenu() {
+  const navShell = document.querySelector(".nav");
+  const menuToggle = document.getElementById("navMenuToggle");
+  const navLinks = document.getElementById("topNavLinks");
+  if (!navShell || !menuToggle || !navLinks) return;
+
+  function closeMenu() {
+    navShell.classList.remove("nav-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
+
+  menuToggle.addEventListener("click", () => {
+    const nextState = !navShell.classList.contains("nav-open");
+    navShell.classList.toggle("nav-open", nextState);
+    menuToggle.setAttribute("aria-expanded", String(nextState));
+  });
+
+  navLinks.querySelectorAll("a, button").forEach((item) => {
+    item.addEventListener("click", () => {
+      closeMenu();
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!navShell.contains(event.target)) {
+      closeMenu();
+    }
+  });
+}
+
 async function loadRuntimeCatalog() {
   if (!GOOGLE_SHEET_PRODUCTS.enabled || !GOOGLE_SHEET_PRODUCTS.sheetId) {
     return loadBaseCatalogFromJson();
@@ -1050,6 +1086,7 @@ async function initializeApp() {
     setupCartTools();
     setupCheckoutForm();
     setupWhatsAppChatLinks();
+    setupMobileNavMenu();
     renderProducts();
     renderCart();
     renderCheckoutSummary();
