@@ -425,12 +425,9 @@ body.modal-open {
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #d8c391, #b89b5e);
-  color: #fff;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  object-fit: cover;
+  border: 4px solid #d8c391;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
   flex-shrink: 0;
 }
 
