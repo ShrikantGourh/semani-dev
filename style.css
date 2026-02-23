@@ -692,14 +692,28 @@ footer {
   }
 
   .nav {
-    padding: 14px 16px;
+    padding: 10px 12px;
+    align-items: flex-start;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    width: 100%;
+  }
+
+  .brand span {
+    font-size: 13px;
+    letter-spacing: 1px;
   }
 
   .nav nav {
-    gap: 10px;
-    font-size: 14px;
+    width: 100%;
+    gap: 6px 10px;
+    font-size: 12px;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    line-height: 1.2;
   }
 
   .catalog-controls {
