@@ -522,13 +522,15 @@ body.modal-open {
   background: #fff;
   border: 1px solid #ede4d1;
   box-shadow: 0 8px 24px rgba(184, 155, 94, 0.12);
-  aspect-ratio: 1 / 1;
+  min-height: 320px;
+  max-height: min(65vh, 620px);
 }
 
 .product-gallery-item img {
   width: 100%;
-  height: 100%;
+  height: min(65vh, 620px);
   object-fit: contain;
+  object-position: center;
   background: #fff;
   display: block;
   transition: transform 0.35s ease;
@@ -702,6 +704,16 @@ footer {
   .product-specs {
     grid-template-columns: 1fr;
   }
+
+  .product-gallery-item {
+    min-height: 220px;
+    max-height: min(50vh, 420px);
+  }
+
+  .product-gallery-item img {
+    height: min(50vh, 420px);
+  }
+
 }
 
 .card-qty {
