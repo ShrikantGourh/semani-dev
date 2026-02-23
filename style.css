@@ -27,9 +27,26 @@ body.modal-open {
   z-index: 1000;
 }
 
-.nav h2 {
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.brand img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(48, 78, 170, 0.12), rgba(48, 78, 170, 0.04));
+  padding: 4px;
+}
+
+.brand span {
   color: #b89b5e;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  font-weight: 700;
 }
 
 .nav nav {
@@ -71,8 +88,27 @@ body.modal-open {
   padding: 90px 16px 40px;
 }
 
+.hero-content {
+  max-width: 700px;
+}
+
+
+.hero-logo {
+  width: 126px;
+  height: 126px;
+  object-fit: contain;
+  margin: 0 auto 16px;
+  display: block;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(48, 78, 170, 0.10), rgba(48, 78, 170, 0.02));
+  padding: 8px;
+}
+
 .hero h1 {
-  font-size: 44px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 62px;
+  font-weight: 400;
+  line-height: 1.15;
   color: #b89b5e;
 }
 
