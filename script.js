@@ -332,7 +332,8 @@ async function loadBaseCatalogFromJson() {
     const sku = item.sku || item.id;
     const imagesFromJson = parseImagesField(item.images || item.galleryImages || item.productImages);
     const fallbackPrimary = sku ? `assets/products/${encodeURIComponent(String(sku).trim())}/image.jpg` : FALLBACK_IMAGE;
-    const hasExplicitImage = Boolean(item.image) || imagesFromJson.length > 0;
+    const hasExplicitPrimaryImage = Boolean(item.image) && item.image !== FALLBACK_IMAGE;
+    const hasExplicitImage = hasExplicitPrimaryImage || imagesFromJson.length > 0;
     const resolvedImages = hasExplicitImage
       ? (imagesFromJson.length ? imagesFromJson : [item.image])
       : await resolveAssetImagesForSku(sku);
@@ -342,7 +343,7 @@ async function loadBaseCatalogFromJson() {
       ...item,
       id: item.id || sku,
       sku,
-      image: item.image || normalizedImages[0] || fallbackPrimary || FALLBACK_IMAGE,
+      image: (hasExplicitPrimaryImage ? item.image : "") || normalizedImages[0] || fallbackPrimary || FALLBACK_IMAGE,
       images: normalizedImages.length ? normalizedImages : [fallbackPrimary || FALLBACK_IMAGE],
       description: getStringCell(item.description || item.productDescription || item.details),
       reels: parseReelsField(item.reels || item.reelsLinks || item.productReels),
