@@ -58,9 +58,10 @@
   </div>
 </section>
 
-<section id="productDetail" class="product-detail product-detail-hidden" aria-hidden="true">
-  <div class="product-detail-shell" data-aos="fade-up">
-    <button id="productDetailBackBtn" class="btn-secondary product-detail-back" type="button">← Back to Catalogue</button>
+<section id="productDetail" class="product-detail-modal product-detail-hidden" aria-hidden="true">
+  <div id="productDetailOverlay" class="product-detail-overlay" role="presentation"></div>
+  <div class="product-detail-shell" role="dialog" aria-modal="true" aria-label="Product details" data-aos="fade-up">
+    <button id="productDetailCloseBtn" class="product-detail-close" type="button" aria-label="Close product details">×</button>
     <div id="productDetailBody"></div>
   </div>
 </section>

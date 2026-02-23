@@ -10,6 +10,10 @@ body {
   background: #fff;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 .nav {
   position: fixed;
   top: 0;
@@ -425,22 +429,54 @@ body {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
-.product-detail {
-  padding: 90px 20px;
-  background: linear-gradient(180deg, #fff 0%, #fcf8ef 100%);
+.product-detail-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
 }
 
 .product-detail-hidden {
   display: none;
 }
 
-.product-detail-shell {
-  max-width: 1200px;
-  margin: 0 auto;
+.product-detail-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 17, 9, 0.52);
+  backdrop-filter: blur(3px);
 }
 
-.product-detail-back {
-  margin: 0 0 18px;
+.product-detail-shell {
+  position: relative;
+  width: min(1200px, 96vw);
+  max-height: 92vh;
+  overflow: auto;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fff 0%, #fcf8ef 100%);
+  padding: 22px;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
+}
+
+.product-detail-close {
+  position: sticky;
+  top: 0;
+  margin-left: auto;
+  display: flex;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #2a2a2a;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 4;
 }
 
 .product-detail-grid {

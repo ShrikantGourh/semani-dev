@@ -531,7 +531,7 @@ async function openProductDetail(productId) {
 
   detailSection.classList.remove("product-detail-hidden");
   detailSection.setAttribute("aria-hidden", "false");
-  detailSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.body.classList.add("modal-open");
 }
 
 function closeProductDetail() {
@@ -539,7 +539,7 @@ function closeProductDetail() {
   if (!detailSection) return;
   detailSection.classList.add("product-detail-hidden");
   detailSection.setAttribute("aria-hidden", "true");
-  document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.body.classList.remove("modal-open");
 }
 
 function getCartQuantityForProduct(productId) {
@@ -737,7 +737,8 @@ function setupCatalogControls() {
   const pageSizeSelect = document.getElementById("pageSizeSelect");
   const prevPageBtn = document.getElementById("prevPageBtn");
   const nextPageBtn = document.getElementById("nextPageBtn");
-  const productDetailBackBtn = document.getElementById("productDetailBackBtn");
+  const productDetailCloseBtn = document.getElementById("productDetailCloseBtn");
+  const productDetailOverlay = document.getElementById("productDetailOverlay");
   if (!searchInput || !categoryFilter || !sortSelect || !pageSizeSelect || !prevPageBtn || !nextPageBtn) return;
 
   let searchTimer;
@@ -786,7 +787,13 @@ function setupCatalogControls() {
     }
   });
 
-  productDetailBackBtn?.addEventListener("click", closeProductDetail);
+  productDetailCloseBtn?.addEventListener("click", closeProductDetail);
+  productDetailOverlay?.addEventListener("click", closeProductDetail);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeProductDetail();
+    }
+  });
 }
 
 function setupCheckoutForm() {
