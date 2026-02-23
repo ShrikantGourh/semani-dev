@@ -48,3 +48,11 @@ In `script.js`, set:
 - `GOOGLE_DRIVE_IMAGES.rootFolderId = "<your-drive-root-folder-id>"`
 
 If any of these are disabled/missing, the app falls back to local JSON catalog.
+
+## Local SKU upload folders
+
+The following SKU folders are pre-created for image uploads:
+
+`JW-001`, `JW-002`, `JW-003`, `JW-004`, `JW-005`, `JW-006`, `JW-007`, `JW-008`, `JW-009`, `JW-010`, `JW-011`, `JW-012`, `JW-013`, `JW-014`, `JW-015`, `JW-016`.
+
+Place product images in each SKU folder using names like `image.jpg`, `image.jpeg`, `image.png`, or numbered files (`1.jpg`, `1.jpeg`, `1.png`, etc.).
