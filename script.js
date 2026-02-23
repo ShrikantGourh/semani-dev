@@ -328,20 +328,22 @@ async function loadBaseCatalogFromJson() {
     throw new Error("Catalog JSON is empty or malformed.");
   }
 
-  const mappedProducts = items.map((item, index) => {
+  const mappedProducts = await Promise.all(items.map(async (item, index) => {
     const sku = item.sku || item.id;
     const imagesFromJson = parseImagesField(item.images || item.galleryImages || item.productImages);
-    const fallbackPrimary = `assets/products/${encodeURIComponent(String(sku).trim())}/image.jpg`;
-    const resolvedImages = imagesFromJson.length
-      ? imagesFromJson
-      : [item.image || fallbackPrimary || FALLBACK_IMAGE];
+    const fallbackPrimary = sku ? `assets/products/${encodeURIComponent(String(sku).trim())}/image.jpg` : FALLBACK_IMAGE;
+    const hasExplicitImage = Boolean(item.image) || imagesFromJson.length > 0;
+    const resolvedImages = hasExplicitImage
+      ? (imagesFromJson.length ? imagesFromJson : [item.image])
+      : await resolveAssetImagesForSku(sku);
+    const normalizedImages = resolvedImages.filter(Boolean);
 
     return {
       ...item,
       id: item.id || sku,
       sku,
-      image: item.image || resolvedImages[0] || FALLBACK_IMAGE,
-      images: resolvedImages,
+      image: item.image || normalizedImages[0] || fallbackPrimary || FALLBACK_IMAGE,
+      images: normalizedImages.length ? normalizedImages : [fallbackPrimary || FALLBACK_IMAGE],
       description: getStringCell(item.description || item.productDescription || item.details),
       reels: parseReelsField(item.reels || item.reelsLinks || item.productReels),
       featuredOrder: index,
@@ -349,7 +351,7 @@ async function loadBaseCatalogFromJson() {
       variantIndex: 1,
       variantCount: 1
     };
-  });
+  }));
 
   return mappedProducts;
 }
