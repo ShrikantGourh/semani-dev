@@ -3,7 +3,6 @@ if (window.AOS?.init) {
 }
 
 const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzF4A6XBvsApmRnVX8hxjkRsflbA-n70Mvdc2hWxUN-bukf2-I0vWzpPynWjBlznOFS5Q/exec";
-const WHATSAPP_CHANNEL_URL = "https://wa.me/message/JJIVVOZGZ4LHL1";
 const CATALOG_URL = "assets/products/catalog.json";
 const IMAGE_MANIFEST_URL = "assets/products/image-manifest.json";
 
@@ -236,25 +235,6 @@ function getProductAssetImageCandidates(sku) {
   const candidates = imageNames.flatMap((name) => imageExtensions.map((ext) => `assets/products/${safeSku}/${name}.${ext}`));
 
   return candidates;
-}
-
-function buildWhatsAppOrderMessage(orderPayload) {
-  const { name, phone, address, product } = orderPayload;
-  return [
-    "Hello Seemani, new order placed:",
-    `Name: ${name}`,
-    `Phone: ${phone}`,
-    `Address: ${address}`,
-    `Products: ${product}`
-  ].join("\n");
-}
-
-function openWhatsAppChannelWithOrder(orderPayload) {
-  const message = buildWhatsAppOrderMessage(orderPayload);
-  const hasQuery = WHATSAPP_CHANNEL_URL.includes("?");
-  const separator = hasQuery ? "&" : "?";
-  const url = `${WHATSAPP_CHANNEL_URL}${separator}text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 async function imageExists(url) {
@@ -737,6 +717,7 @@ function addToCart(productId) {
   renderCart();
   renderCheckoutSummary();
   renderProducts();
+  refreshActiveProductDetail();
 }
 
 function changeProductCardCartQuantity(productId, change) {
@@ -753,6 +734,7 @@ function updateCartQuantity(productId, change) {
   renderCart();
   renderCheckoutSummary();
   renderProducts();
+  refreshActiveProductDetail();
 }
 
 function deleteFromCart(productId) {
@@ -763,6 +745,7 @@ function deleteFromCart(productId) {
   renderCart();
   renderCheckoutSummary();
   renderProducts();
+  refreshActiveProductDetail();
 }
 
 function increaseCartQuantity(productId) {
@@ -780,6 +763,12 @@ function clearCart() {
   renderCart();
   renderCheckoutSummary();
   renderProducts();
+  refreshActiveProductDetail();
+}
+
+function refreshActiveProductDetail() {
+  if (!activeDetailProductId) return;
+  openProductDetail(activeDetailProductId);
 }
 
 function getCartTotals() {
@@ -997,9 +986,8 @@ function setupCheckoutForm() {
 
     try {
       await submitToGoogleSheet(orderPayload);
-      openWhatsAppChannelWithOrder(orderPayload);
       if (orderStatus) {
-        orderStatus.innerHTML = `✅ Order submitted successfully! <a href="${WHATSAPP_CHANNEL_URL}" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>`;
+        orderStatus.textContent = "✅ Order submitted successfully!";
       }
       clearCart();
       this.reset();
@@ -1009,15 +997,6 @@ function setupCheckoutForm() {
         orderStatus.textContent = "Order failed. Please try again.";
       }
     }
-  });
-}
-
-function setupWhatsAppChatLinks() {
-  const links = document.querySelectorAll("[data-whatsapp-channel-link]");
-  links.forEach((link) => {
-    link.setAttribute("href", WHATSAPP_CHANNEL_URL);
-    link.setAttribute("target", "_blank");
-    link.setAttribute("rel", "noopener noreferrer");
   });
 }
 
@@ -1049,7 +1028,6 @@ async function initializeApp() {
     setupCatalogControls();
     setupCartTools();
     setupCheckoutForm();
-    setupWhatsAppChatLinks();
     renderProducts();
     renderCart();
     renderCheckoutSummary();
