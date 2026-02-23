@@ -4,14 +4,17 @@
   <meta charset="UTF-8">
   <title>Seemani | Artificial Jewellery Store</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="nav">
-  <h2>SEEMANI</h2>
+  <a href="#" class="brand" aria-label="Seemani home">
+    <img src="assets/seemani-logo.svg" alt="Seemani logo">
+    <span>SEEMANI</span>
+  </a>
   <nav>
     <a href="#catalog">Catalogue</a>
     <button id="cartToggleBtn" class="nav-cart-btn" type="button">Cart (0)</button>
@@ -24,9 +27,12 @@
 </header>
 
 <section class="hero">
-  <h1 data-aos="fade-up">Artificial Jewellery E-Commerce</h1>
-  <p data-aos="fade-up">Affordable • Stylish • Ready to Ship</p>
-  <a href="#catalog" class="btn-main">Shop Now</a>
+  <div class="hero-content">
+    <img class="hero-logo" src="assets/seemani-logo.svg" alt="Seemani brand logo" data-aos="fade-up">
+    <h1 data-aos="fade-up">Adorn Your Everyday with a Touch of Grace</h1>
+    <p data-aos="fade-up">Affordable • Stylish • Ready to Ship</p>
+    <a href="#catalog" class="btn-main">Shop Now</a>
+  </div>
 </section>
 
 <section id="catalog" class="catalog">
