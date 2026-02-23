@@ -3,6 +3,7 @@ if (window.AOS?.init) {
 }
 
 const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzF4A6XBvsApmRnVX8hxjkRsflbA-n70Mvdc2hWxUN-bukf2-I0vWzpPynWjBlznOFS5Q/exec";
+const WHATSAPP_CHANNEL_URL = "https://wa.me/message/JJIVVOZGZ4LHL1";
 const CATALOG_URL = "assets/products/catalog.json";
 
 /**
@@ -131,16 +132,31 @@ function parseReelsField(value) {
 function getProductAssetImageCandidates(sku) {
   if (!sku) return [FALLBACK_IMAGE];
   const safeSku = encodeURIComponent(String(sku).trim());
+  const imageNames = ["image", "1", "2", "3", "4", "5"];
+  const imageExtensions = ["jpg", "jpeg", "png"];
 
+  const candidates = imageNames.flatMap((name) => imageExtensions.map((ext) => `assets/products/${safeSku}/${name}.${ext}`));
+
+  return candidates;
+}
+
+function buildWhatsAppOrderMessage(orderPayload) {
+  const { name, phone, address, product } = orderPayload;
   return [
-    `assets/products/${safeSku}/image.jpg`,
-    `assets/products/${safeSku}/image.png`,
-    `assets/products/${safeSku}/1.jpg`,
-    `assets/products/${safeSku}/2.jpg`,
-    `assets/products/${safeSku}/3.jpg`,
-    `assets/products/${safeSku}/4.jpg`,
-    `assets/products/${safeSku}/5.jpg`
-  ];
+    "Hello Seemani, new order placed:",
+    `Name: ${name}`,
+    `Phone: ${phone}`,
+    `Address: ${address}`,
+    `Products: ${product}`
+  ].join("\n");
+}
+
+function openWhatsAppChannelWithOrder(orderPayload) {
+  const message = buildWhatsAppOrderMessage(orderPayload);
+  const hasQuery = WHATSAPP_CHANNEL_URL.includes("?");
+  const separator = hasQuery ? "&" : "?";
+  const url = `${WHATSAPP_CHANNEL_URL}${separator}text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 async function imageExists(url) {
@@ -829,8 +845,9 @@ function setupCheckoutForm() {
 
     try {
       await submitToGoogleSheet(orderPayload);
+      openWhatsAppChannelWithOrder(orderPayload);
       if (orderStatus) {
-        orderStatus.textContent = "✅ Order Submitted Successfully!";
+        orderStatus.innerHTML = `✅ Order submitted successfully! <a href="${WHATSAPP_CHANNEL_URL}" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>`;
       }
       clearCart();
       this.reset();
@@ -840,6 +857,15 @@ function setupCheckoutForm() {
         orderStatus.textContent = "Order failed. Please try again.";
       }
     }
+  });
+}
+
+function setupWhatsAppChatLinks() {
+  const links = document.querySelectorAll("[data-whatsapp-channel-link]");
+  links.forEach((link) => {
+    link.setAttribute("href", WHATSAPP_CHANNEL_URL);
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", "noopener noreferrer");
   });
 }
 
@@ -871,6 +897,7 @@ async function initializeApp() {
     setupCatalogControls();
     setupCartTools();
     setupCheckoutForm();
+    setupWhatsAppChatLinks();
     renderProducts();
     renderCart();
     renderCheckoutSummary();
