@@ -5,6 +5,7 @@ if (window.AOS?.init) {
 const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzF4A6XBvsApmRnVX8hxjkRsflbA-n70Mvdc2hWxUN-bukf2-I0vWzpPynWjBlznOFS5Q/exec";
 const WHATSAPP_CHANNEL_URL = "https://wa.me/message/JJIVVOZGZ4LHL1";
 const CATALOG_URL = "assets/products/catalog.json";
+const IMAGE_MANIFEST_URL = "assets/products/image-manifest.json";
 
 /**
  * Data source priority:
@@ -23,7 +24,7 @@ const GOOGLE_DRIVE_IMAGES = {
   rootFolderId: ""
 };
 
-const FALLBACK_IMAGE = "assets/products/pearl-drop-earrings.svg";
+const FALLBACK_IMAGE = "assets/products/placeholder.svg";
 
 const catalogueState = {
   query: "",
@@ -46,6 +47,7 @@ let filteredProducts = [];
 let cart = JSON.parse(localStorage.getItem("seemaniCart")) || [];
 let selectedVariantByProductId = {};
 let activeDetailProductId = null;
+let localImageManifest = null;
 
 function getStringCell(value) {
   if (value === null || value === undefined) return "";
@@ -140,8 +142,46 @@ function getFileNameFromPath(path) {
 
 function getVariantLabelFromImageName(name, index = 0) {
   const baseName = getStringCell(name).replace(/\.[^.]+$/, "").trim();
+  if (/^dummy(?:\s+product)?\s+image$/i.test(baseName)) {
+    return `Variant ${index + 1}`;
+  }
   if (!baseName) return `Variant ${index + 1}`;
   return baseName;
+}
+
+function normalizeAssetUrl(path) {
+  const normalized = getStringCell(path);
+  if (!normalized) return "";
+  return encodeURI(normalized.replace(/^\.\//, ""));
+}
+
+async function loadLocalImageManifest() {
+  if (localImageManifest) return localImageManifest;
+
+  try {
+    const response = await fetch(IMAGE_MANIFEST_URL, { cache: "no-store" });
+    if (!response.ok) throw new Error("Manifest not found");
+    const data = await response.json();
+    localImageManifest = data && typeof data === "object" ? data : {};
+  } catch (error) {
+    localImageManifest = {};
+  }
+
+  return localImageManifest;
+}
+
+function getManifestImagesForSku(sku) {
+  if (!sku || !localImageManifest) return [];
+  const key = String(sku).trim();
+  const matches = localImageManifest[key] || [];
+  if (!Array.isArray(matches)) return [];
+  return matches.map((path) => normalizeAssetUrl(path)).filter(Boolean);
+}
+
+function hasManifestEntryForSku(sku) {
+  if (!sku || !localImageManifest) return false;
+  const key = String(sku).trim();
+  return Object.prototype.hasOwnProperty.call(localImageManifest, key);
 }
 
 function buildVariantsFromImageUrls(imageUrls) {
@@ -218,6 +258,15 @@ async function imageExists(url) {
 }
 
 async function resolveAssetImagesForSku(sku) {
+  const manifestImages = getManifestImagesForSku(sku);
+  if (manifestImages.length) {
+    return manifestImages;
+  }
+
+  if (localImageManifest && !hasManifestEntryForSku(sku)) {
+    return [FALLBACK_IMAGE];
+  }
+
   const candidates = getProductAssetImageCandidates(sku);
   const checks = await Promise.all(candidates.map((url) => imageExists(url)));
   const existing = candidates.filter((_, index) => checks[index]);
@@ -349,6 +398,8 @@ function applyDriveImagesAsVariants(products, skuImageMap) {
 
 
 async function loadBaseCatalogFromJson() {
+  await loadLocalImageManifest();
+
   const response = await fetch(CATALOG_URL, { cache: "no-store" });
   if (!response.ok) {
     throw new Error("Unable to load product catalog JSON.");
@@ -377,7 +428,7 @@ async function loadBaseCatalogFromJson() {
 
   const mappedProducts = await Promise.all(items.map(async (item, index) => {
     const sku = item.sku || item.id;
-    const imagesFromJson = parseImagesField(item.images || item.galleryImages || item.productImages);
+    const imagesFromJson = parseImagesField(item.images || item.galleryImages || item.productImages).map((path) => normalizeAssetUrl(path));
     const fallbackPrimary = sku ? `assets/products/${encodeURIComponent(String(sku).trim())}/image.jpg` : FALLBACK_IMAGE;
     const hasExplicitPrimaryImage = Boolean(item.image) && item.image !== FALLBACK_IMAGE;
     const hasExplicitImage = hasExplicitPrimaryImage || imagesFromJson.length > 0;
