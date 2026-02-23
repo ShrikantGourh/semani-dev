@@ -1,4 +1,6 @@
-AOS.init();
+if (window.AOS?.init) {
+  window.AOS.init();
+}
 
 const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzF4A6XBvsApmRnVX8hxjkRsflbA-n70Mvdc2hWxUN-bukf2-I0vWzpPynWjBlznOFS5Q/exec";
 const CATALOG_URL = "assets/products/catalog.json";
