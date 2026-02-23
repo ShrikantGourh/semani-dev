@@ -30,6 +30,13 @@ const catalogueState = {
   pageSize: 40
 };
 
+const DEFAULT_REELS = [
+  {
+    title: "Seemani Style Reel",
+    embedUrl: "https://www.instagram.com/reel/DU92TGLlA4w/embed"
+  }
+];
+
 let productCatalog = [];
 let productById = new Map();
 let filteredProducts = [];
@@ -70,11 +77,84 @@ function normalizeProductRow(row) {
     price: marketPrice,
     extraDeliveryCharges,
     image: FALLBACK_IMAGE,
+    images: [],
+    description: getStringCell(row.description || row.Description || row.details || row.Details),
+    reels: [],
     featuredOrder: 0,
     variantOf: null,
     variantIndex: 1,
     variantCount: 1
   };
+}
+
+function toSlug(value) {
+  return getStringCell(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function parseImagesField(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) {
+    return value.map((item) => getStringCell(item)).filter(Boolean);
+  }
+
+  const text = getStringCell(value);
+  if (!text) return [];
+
+  try {
+    const parsed = JSON.parse(text);
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => getStringCell(item)).filter(Boolean);
+    }
+  } catch (error) {
+    // no-op: plain delimited string fallback below
+  }
+
+  return text
+    .split(/[|,\n]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseReelsField(value) {
+  const rawItems = parseImagesField(value);
+  return rawItems.map((item, index) => ({
+    title: `Product Reel ${index + 1}`,
+    embedUrl: item
+  }));
+}
+
+function getProductAssetImageCandidates(sku) {
+  if (!sku) return [FALLBACK_IMAGE];
+  const safeSku = encodeURIComponent(String(sku).trim());
+
+  return [
+    `assets/products/${safeSku}/image.jpg`,
+    `assets/products/${safeSku}/image.png`,
+    `assets/products/${safeSku}/1.jpg`,
+    `assets/products/${safeSku}/2.jpg`,
+    `assets/products/${safeSku}/3.jpg`,
+    `assets/products/${safeSku}/4.jpg`,
+    `assets/products/${safeSku}/5.jpg`
+  ];
+}
+
+async function imageExists(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = `${url}?v=${Date.now()}`;
+  });
+}
+
+async function resolveAssetImagesForSku(sku) {
+  const candidates = getProductAssetImageCandidates(sku);
+  const checks = await Promise.all(candidates.map((url) => imageExists(url)));
+  const existing = candidates.filter((_, index) => checks[index]);
+  return existing.length ? existing : [FALLBACK_IMAGE];
 }
 
 function parseSheetRowsFromGviz(rawText) {
@@ -203,12 +283,6 @@ function applyDriveImagesAsVariants(products, skuImageMap) {
 }
 
 
-function getAssetImageForSku(sku) {
-  if (!sku) return FALLBACK_IMAGE;
-  const safeSku = encodeURIComponent(String(sku).trim());
-  return `assets/products/${safeSku}/image.jpg`;
-}
-
 async function loadBaseCatalogFromJson() {
   const response = await fetch(CATALOG_URL, { cache: "no-store" });
   if (!response.ok) {
@@ -236,19 +310,30 @@ async function loadBaseCatalogFromJson() {
     throw new Error("Catalog JSON is empty or malformed.");
   }
 
-  return items.map((item, index) => {
+  const mappedProducts = items.map((item, index) => {
     const sku = item.sku || item.id;
+    const imagesFromJson = parseImagesField(item.images || item.galleryImages || item.productImages);
+    const fallbackPrimary = `assets/products/${encodeURIComponent(String(sku).trim())}/image.jpg`;
+    const resolvedImages = imagesFromJson.length
+      ? imagesFromJson
+      : [item.image || fallbackPrimary || FALLBACK_IMAGE];
+
     return {
       ...item,
       id: item.id || sku,
       sku,
-      image: item.image || getAssetImageForSku(sku),
+      image: item.image || resolvedImages[0] || FALLBACK_IMAGE,
+      images: resolvedImages,
+      description: getStringCell(item.description || item.productDescription || item.details),
+      reels: parseReelsField(item.reels || item.reelsLinks || item.productReels),
       featuredOrder: index,
       variantOf: sku,
       variantIndex: 1,
       variantCount: 1
     };
   });
+
+  return mappedProducts;
 }
 
 function refreshCatalogData(items) {
@@ -325,6 +410,15 @@ function renderProducts() {
       const cartQty = getCartQuantityForProduct(product.id);
       const card = document.createElement("article");
       card.className = "product-card";
+      card.setAttribute("role", "button");
+      card.tabIndex = 0;
+      card.addEventListener("click", () => openProductDetail(product.id));
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openProductDetail(product.id);
+        }
+      });
       card.innerHTML = `
         <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}';">
         <div class="content">
@@ -334,12 +428,12 @@ function renderProducts() {
           <p class="price">₹${product.price}</p>
           ${
             cartQty > 0
-              ? `<div class="qty-controls card-qty" role="group" aria-label="Quantity picker for ${product.name}">
-                   <button class="qty-btn" type="button" onclick="changeProductCardCartQuantity('${product.id}', -1)">−</button>
+              ? `<div class="qty-controls card-qty" role="group" aria-label="Quantity picker for ${product.name}" onclick="event.stopPropagation()">
+                   <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${product.id}', -1)">−</button>
                    <span class="qty-value" id="qty-${product.id}">${cartQty}</span>
-                   <button class="qty-btn" type="button" onclick="changeProductCardCartQuantity('${product.id}', 1)">+</button>
+                   <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${product.id}', 1)">+</button>
                  </div>`
-              : `<button class="btn-main" type="button" onclick="addToCart('${product.id}')">Add to Cart</button>`
+              : `<button class="btn-main" type="button" onclick="event.stopPropagation();addToCart('${product.id}')">Add to Cart</button>`
           }
         </div>
       `;
@@ -353,6 +447,99 @@ function renderProducts() {
   pageIndicator.textContent = `Page ${catalogueState.page} of ${totalPages}`;
   prevBtn.disabled = catalogueState.page <= 1;
   nextBtn.disabled = catalogueState.page >= totalPages;
+}
+
+function getSafeReels(product) {
+  if (Array.isArray(product.reels) && product.reels.length) {
+    return product.reels;
+  }
+  return DEFAULT_REELS;
+}
+
+function buildProductGallery(images, productName) {
+  return images
+    .map(
+      (imageUrl, index) => `
+      <figure class="product-gallery-item">
+        <img src="${imageUrl}" alt="${productName} image ${index + 1}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}';">
+      </figure>
+    `
+    )
+    .join("");
+}
+
+function buildProductReels(reels) {
+  return reels
+    .map(
+      (reel) => `
+      <article class="reel-card">
+        <h4>${reel.title || "Product Reel"}</h4>
+        <iframe
+          src="${reel.embedUrl}"
+          loading="lazy"
+          allowfullscreen
+          title="${reel.title || "Product Reel"}">
+        </iframe>
+      </article>
+    `
+    )
+    .join("");
+}
+
+async function openProductDetail(productId) {
+  const product = productById.get(productId);
+  const detailSection = document.getElementById("productDetail");
+  const detailBody = document.getElementById("productDetailBody");
+  if (!product || !detailSection || !detailBody) return;
+
+  const detailDescription = product.description || `${product.name} is a premium ${product.category} design made to elevate your look.`;
+  let detailImages = Array.isArray(product.images) && product.images.length ? product.images : [product.image || FALLBACK_IMAGE];
+
+  if ((!product.images || product.images.length <= 1) && (!product.images?.[0] || product.images[0].includes(`/image.jpg`))) {
+    detailImages = await resolveAssetImagesForSku(product.sku);
+    product.images = detailImages;
+    product.image = detailImages[0] || product.image;
+  }
+  const reels = getSafeReels(product);
+  const slug = toSlug(product.name || product.sku);
+
+  detailBody.innerHTML = `
+    <div class="product-detail-grid">
+      <div class="product-gallery">${buildProductGallery(detailImages, product.name)}</div>
+      <div class="product-detail-content">
+        <p class="product-chip">${product.category}</p>
+        <h2>${product.name}</h2>
+        <p class="product-detail-price">₹${product.price}</p>
+        <p class="product-detail-description">${detailDescription}</p>
+        <dl class="product-specs">
+          <div><dt>SKU</dt><dd>${product.sku}</dd></div>
+          <div><dt>Type</dt><dd>${product.type || "Classic"}</dd></div>
+          <div><dt>Available Qty</dt><dd>${product.quantity ?? "NA"}</dd></div>
+          <div><dt>Extra Delivery</dt><dd>₹${product.extraDeliveryCharges || 0}</dd></div>
+          <div><dt>Handle</dt><dd>@${slug || "seemani-style"}</dd></div>
+        </dl>
+        <button class="btn-main" type="button" onclick="addToCart('${product.id}')">Add to Cart</button>
+      </div>
+    </div>
+    <div class="product-reels-wrap">
+      <h3>Style Reels for this Product</h3>
+      <div class="product-reels-grid">
+        ${buildProductReels(reels)}
+      </div>
+    </div>
+  `;
+
+  detailSection.classList.remove("product-detail-hidden");
+  detailSection.setAttribute("aria-hidden", "false");
+  detailSection.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeProductDetail() {
+  const detailSection = document.getElementById("productDetail");
+  if (!detailSection) return;
+  detailSection.classList.add("product-detail-hidden");
+  detailSection.setAttribute("aria-hidden", "true");
+  document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function getCartQuantityForProduct(productId) {
@@ -550,6 +737,7 @@ function setupCatalogControls() {
   const pageSizeSelect = document.getElementById("pageSizeSelect");
   const prevPageBtn = document.getElementById("prevPageBtn");
   const nextPageBtn = document.getElementById("nextPageBtn");
+  const productDetailBackBtn = document.getElementById("productDetailBackBtn");
   if (!searchInput || !categoryFilter || !sortSelect || !pageSizeSelect || !prevPageBtn || !nextPageBtn) return;
 
   let searchTimer;
@@ -597,6 +785,8 @@ function setupCatalogControls() {
       document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   });
+
+  productDetailBackBtn?.addEventListener("click", closeProductDetail);
 }
 
 function setupCheckoutForm() {
@@ -690,3 +880,4 @@ window.changeProductCardCartQuantity = changeProductCardCartQuantity;
 window.increaseCartQuantity = increaseCartQuantity;
 window.decreaseCartQuantity = decreaseCartQuantity;
 window.deleteFromCart = deleteFromCart;
+window.openProductDetail = openProductDetail;
