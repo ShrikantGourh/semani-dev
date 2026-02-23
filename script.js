@@ -44,6 +44,8 @@ let productCatalog = [];
 let productById = new Map();
 let filteredProducts = [];
 let cart = JSON.parse(localStorage.getItem("seemaniCart")) || [];
+let selectedVariantByProductId = {};
+let activeDetailProductId = null;
 
 function getStringCell(value) {
   if (value === null || value === undefined) return "";
@@ -127,6 +129,53 @@ function parseReelsField(value) {
     title: `Product Reel ${index + 1}`,
     embedUrl: item
   }));
+}
+
+function getFileNameFromPath(path) {
+  const cleanPath = getStringCell(path).split("?")[0].split("#")[0];
+  if (!cleanPath) return "";
+  const segments = cleanPath.split("/");
+  return decodeURIComponent(segments[segments.length - 1] || "");
+}
+
+function getVariantLabelFromImageName(name, index = 0) {
+  const baseName = getStringCell(name).replace(/\.[^.]+$/, "").trim();
+  if (!baseName) return `Variant ${index + 1}`;
+  return baseName;
+}
+
+function buildVariantsFromImageUrls(imageUrls) {
+  const cleaned = (Array.isArray(imageUrls) ? imageUrls : []).map((url) => getStringCell(url)).filter(Boolean);
+  const uniqueUrls = [...new Set(cleaned)];
+
+  if (!uniqueUrls.length) {
+    return [{ id: "default", label: "Default", image: FALLBACK_IMAGE }];
+  }
+
+  return uniqueUrls.map((url, index) => {
+    const fileName = getFileNameFromPath(url);
+    const label = getVariantLabelFromImageName(fileName, index);
+    const safeVariantId = toSlug(label) || `variant-${index + 1}`;
+
+    return {
+      id: safeVariantId,
+      label,
+      image: url
+    };
+  });
+}
+
+function getSelectedVariant(product) {
+  const variants = Array.isArray(product?.variants) && product.variants.length ? product.variants : [{ id: "default", label: "Default", image: product?.image || FALLBACK_IMAGE }];
+  const selectedVariantId = selectedVariantByProductId[product.id];
+  return variants.find((variant) => variant.id === selectedVariantId) || variants[0];
+}
+
+function getProductNameWithVariant(product, variant) {
+  if (!variant || !variant.label || variant.label.toLowerCase() === "default") {
+    return product.name;
+  }
+  return `${product.name} (${variant.label})`;
 }
 
 function getProductAssetImageCandidates(sku) {
@@ -271,33 +320,31 @@ async function loadSkuImageMapFromDrive() {
 }
 
 function applyDriveImagesAsVariants(products, skuImageMap) {
-  const expanded = [];
-
-  products.forEach((product, index) => {
+  return products.map((product, index) => {
     const images = skuImageMap.get(product.sku) || [];
+    const imageUrls = images.length ? images.map((entry) => entry.url) : [product.image || FALLBACK_IMAGE];
+    const variants = images.length
+      ? images.map((entry, imageIndex) => {
+        const label = getVariantLabelFromImageName(entry.name, imageIndex);
+        return {
+          id: toSlug(label) || `variant-${imageIndex + 1}`,
+          label,
+          image: entry.url
+        };
+      })
+      : buildVariantsFromImageUrls(imageUrls);
 
-    if (!images.length) {
-      expanded.push({ ...product, featuredOrder: expanded.length || index });
-      return;
-    }
-
-    const variantCount = images.length;
-
-    images.forEach((image, imageIndex) => {
-      expanded.push({
-        ...product,
-        id: variantCount > 1 ? `${product.sku}-v${imageIndex + 1}` : product.sku,
-        name: variantCount > 1 ? `${product.name} (Variant ${imageIndex + 1})` : product.name,
-        image: image.url,
-        variantOf: product.sku,
-        variantIndex: imageIndex + 1,
-        variantCount,
-        featuredOrder: expanded.length
-      });
-    });
+    return {
+      ...product,
+      image: variants[0]?.image || product.image || FALLBACK_IMAGE,
+      images: imageUrls,
+      variants,
+      variantOf: product.sku,
+      variantIndex: 1,
+      variantCount: variants.length,
+      featuredOrder: index
+    };
   });
-
-  return expanded;
 }
 
 
@@ -348,9 +395,10 @@ async function loadBaseCatalogFromJson() {
       description: getStringCell(item.description || item.productDescription || item.details),
       reels: parseReelsField(item.reels || item.reelsLinks || item.productReels),
       featuredOrder: index,
+      variants: buildVariantsFromImageUrls(normalizedImages),
       variantOf: sku,
       variantIndex: 1,
-      variantCount: 1
+      variantCount: normalizedImages.length || 1
     };
   }));
 
@@ -428,7 +476,14 @@ function renderProducts() {
     grid.innerHTML = "<p>No products found. Try a different search or filter.</p>";
   } else {
     pageProducts.forEach((product) => {
-      const cartQty = getCartQuantityForProduct(product.id);
+      const selectedVariant = getSelectedVariant(product);
+      const cartProductId = `${product.id}::${selectedVariant.id}`;
+      const cartQty = getCartQuantityForProduct(cartProductId);
+      const displayName = getProductNameWithVariant(product, selectedVariant);
+      const variantChips = (product.variants || []).map((variant) => {
+        const isSelected = variant.id === selectedVariant.id;
+        return `<button class="variant-chip ${isSelected ? "is-selected" : ""}" type="button" onclick="event.stopPropagation();selectProductVariant('${product.id}','${variant.id}',false)">${variant.label}</button>`;
+      }).join("");
       const card = document.createElement("article");
       card.className = "product-card";
       card.setAttribute("role", "button");
@@ -441,18 +496,19 @@ function renderProducts() {
         }
       });
       card.innerHTML = `
-        <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}';">
+        <img src="${selectedVariant.image || product.image}" alt="${displayName}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}';">
         <div class="content">
-          <h3>${product.name}</h3>
+          <h3>${displayName}</h3>
           <p class="meta">${product.category}${product.type ? ` • ${product.type}` : ""}</p>
           <p class="meta">SKU: ${product.sku}</p>
+          ${product.variants?.length > 1 ? `<div class="variant-chip-row" onclick="event.stopPropagation()">${variantChips}</div>` : ""}
           <p class="price">₹${product.price}</p>
           ${
             cartQty > 0
-              ? `<div class="qty-controls card-qty" role="group" aria-label="Quantity picker for ${product.name}" onclick="event.stopPropagation()">
-                   <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${product.id}', -1)">−</button>
-                   <span class="qty-value" id="qty-${product.id}">${cartQty}</span>
-                   <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${product.id}', 1)">+</button>
+              ? `<div class="qty-controls card-qty" role="group" aria-label="Quantity picker for ${displayName}" onclick="event.stopPropagation()">
+                   <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${cartProductId}', -1)">−</button>
+                   <span class="qty-value" id="qty-${cartProductId}">${cartQty}</span>
+                   <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${cartProductId}', 1)">+</button>
                  </div>`
               : `<button class="btn-main" type="button" onclick="event.stopPropagation();addToCart('${product.id}')">Add to Cart</button>`
           }
@@ -512,28 +568,43 @@ function buildProductReels(reels) {
 }
 
 async function openProductDetail(productId) {
+  activeDetailProductId = productId;
   const product = productById.get(productId);
   const detailSection = document.getElementById("productDetail");
   const detailBody = document.getElementById("productDetailBody");
   if (!product || !detailSection || !detailBody) return;
 
+  const selectedVariant = getSelectedVariant(product);
+  const detailName = getProductNameWithVariant(product, selectedVariant);
   const detailDescription = product.description || `${product.name} is a premium ${product.category} design made to elevate your look.`;
-  let detailImages = Array.isArray(product.images) && product.images.length ? product.images : [product.image || FALLBACK_IMAGE];
+  let detailImages = [selectedVariant.image || product.image || FALLBACK_IMAGE];
 
   if ((!product.images || product.images.length <= 1) && (!product.images?.[0] || product.images[0].includes(`/image.jpg`))) {
-    detailImages = await resolveAssetImagesForSku(product.sku);
-    product.images = detailImages;
-    product.image = detailImages[0] || product.image;
+    const resolvedImages = await resolveAssetImagesForSku(product.sku);
+    product.images = resolvedImages;
+    product.variants = buildVariantsFromImageUrls(resolvedImages);
+    const activeVariant = getSelectedVariant(product);
+    detailImages = [activeVariant.image || resolvedImages[0] || product.image || FALLBACK_IMAGE];
+    product.image = activeVariant.image || resolvedImages[0] || product.image;
   }
+
+  const detailVariantChips = (product.variants || []).map((variant) => {
+    const isSelected = variant.id === getSelectedVariant(product).id;
+    return `<button class="variant-chip ${isSelected ? "is-selected" : ""}" type="button" onclick="selectProductVariant('${product.id}','${variant.id}',true)">${variant.label}</button>`;
+  }).join("");
+
+  const selectedCartId = `${product.id}::${getSelectedVariant(product).id}`;
+  const detailCartQty = getCartQuantityForProduct(selectedCartId);
   const reels = getSafeReels(product);
-  const slug = toSlug(product.name || product.sku);
+  const slug = toSlug(detailName || product.sku);
 
   detailBody.innerHTML = `
     <div class="product-detail-grid">
-      <div class="product-gallery">${buildProductGallery(detailImages, product.name)}</div>
+      <div class="product-gallery">${buildProductGallery(detailImages, detailName)}</div>
       <div class="product-detail-content">
         <p class="product-chip">${product.category}</p>
-        <h2>${product.name}</h2>
+        <h2>${detailName}</h2>
+        ${product.variants?.length > 1 ? `<div class="variant-chip-row">${detailVariantChips}</div>` : ""}
         <p class="product-detail-price">₹${product.price}</p>
         <p class="product-detail-description">${detailDescription}</p>
         <dl class="product-specs">
@@ -543,7 +614,13 @@ async function openProductDetail(productId) {
           <div><dt>Extra Delivery</dt><dd>₹${product.extraDeliveryCharges || 0}</dd></div>
           <div><dt>Handle</dt><dd>@${slug || "seemani-style"}</dd></div>
         </dl>
-        <button class="btn-main" type="button" onclick="addToCart('${product.id}')">Add to Cart</button>
+        ${detailCartQty > 0
+          ? `<div class="qty-controls" role="group" aria-label="Quantity controls for ${detailName}">
+              <button class="qty-btn" type="button" onclick="decreaseCartQuantity('${selectedCartId}')">−</button>
+              <span class="qty-value">${detailCartQty}</span>
+              <button class="qty-btn" type="button" onclick="increaseCartQuantity('${selectedCartId}')">+</button>
+            </div>`
+          : `<button class="btn-main" type="button" onclick="addToCart('${product.id}')">Add to Cart</button>`}
       </div>
     </div>
     <div class="product-reels-wrap">
@@ -560,6 +637,7 @@ async function openProductDetail(productId) {
 }
 
 function closeProductDetail() {
+  activeDetailProductId = null;
   const detailSection = document.getElementById("productDetail");
   if (!detailSection) return;
   detailSection.classList.add("product-detail-hidden");
@@ -576,11 +654,22 @@ function addToCart(productId) {
   const product = productById.get(productId);
   if (!product) return;
 
-  const existing = cart.find((item) => item.id === product.id);
+  const variant = getSelectedVariant(product);
+  const cartProductId = `${product.id}::${variant.id}`;
+  const cartProductName = getProductNameWithVariant(product, variant);
+
+  const existing = cart.find((item) => item.id === cartProductId);
   if (existing) {
     existing.quantity += 1;
   } else {
-    cart.push({ ...product, quantity: 1 });
+    cart.push({
+      ...product,
+      id: cartProductId,
+      name: cartProductName,
+      image: variant.image || product.image,
+      selectedVariant: variant,
+      quantity: 1
+    });
   }
 
   saveCart();
@@ -924,3 +1013,17 @@ window.increaseCartQuantity = increaseCartQuantity;
 window.decreaseCartQuantity = decreaseCartQuantity;
 window.deleteFromCart = deleteFromCart;
 window.openProductDetail = openProductDetail;
+
+function selectProductVariant(productId, variantId, refreshDetail) {
+  selectedVariantByProductId = {
+    ...selectedVariantByProductId,
+    [productId]: variantId
+  };
+
+  renderProducts();
+  if (refreshDetail && activeDetailProductId === productId) {
+    openProductDetail(productId);
+  }
+}
+
+window.selectProductVariant = selectProductVariant;

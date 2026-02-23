@@ -217,6 +217,30 @@ body.modal-open {
   font-weight: 700;
 }
 
+.variant-chip-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.variant-chip {
+  border: 1px solid #dbc796;
+  background: #fff;
+  color: #7a5f2b;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.variant-chip.is-selected {
+  background: #b89b5e;
+  color: #fff;
+  border-color: #b89b5e;
+}
+
 .pagination {
   max-width: 1200px;
   margin: 24px auto 0;
