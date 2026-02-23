@@ -21,8 +21,8 @@ body.modal-open {
   padding: 16px 30px;
   background: rgba(255, 255, 255, 0.95);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   z-index: 1000;
 }
@@ -52,6 +52,26 @@ body.modal-open {
 .nav nav {
   display: flex;
   gap: 16px;
+  margin-left: auto;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-menu-toggle {
+  display: none;
+  border: 1px solid #e7dcc1;
+  background: #fff;
+  color: #7a5f2b;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .nav a {
@@ -321,8 +341,8 @@ body.modal-open {
 
 .cart-items li {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 16px;
   border-bottom: 1px solid #efefef;
   padding: 12px 0;
   gap: 14px;
@@ -695,11 +715,51 @@ footer {
     padding: 14px 16px;
   }
 
+  .nav-actions {
+    margin-left: auto;
+  }
+
+  .nav-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .nav nav {
-    gap: 10px;
-    font-size: 14px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 16px;
+    width: min(240px, calc(100vw - 32px));
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+  }
+
+  .nav.nav-open nav {
+    display: flex;
+  }
+
+  .nav nav a {
+    padding: 10px;
+    border-radius: 8px;
+    text-align: left;
+  }
+
+  .nav nav a:hover {
+    background: #f8f3e8;
+  }
+
+  .nav-actions .nav-cart-btn {
+    border: 1px solid #e7dcc1;
+    border-radius: 10px;
+    padding: 8px 10px;
+    background: #fff;
   }
 
   .catalog-controls {
