@@ -202,25 +202,53 @@ function applyDriveImagesAsVariants(products, skuImageMap) {
   return expanded;
 }
 
+
+function getAssetImageForSku(sku) {
+  if (!sku) return FALLBACK_IMAGE;
+  const safeSku = encodeURIComponent(String(sku).trim());
+  return `assets/products/${safeSku}/image.jpg`;
+}
+
 async function loadBaseCatalogFromJson() {
   const response = await fetch(CATALOG_URL, { cache: "no-store" });
   if (!response.ok) {
     throw new Error("Unable to load product catalog JSON.");
   }
 
-  const data = await response.json();
-  if (!Array.isArray(data) || !data.length) {
+  const rawText = await response.text();
+  let items = [];
+
+  try {
+    const data = JSON.parse(rawText);
+    if (Array.isArray(data)) {
+      items = data.map((item) => ({
+        ...item,
+        sku: item.sku || item.id,
+        id: item.id || item.sku
+      }));
+    }
+  } catch (error) {
+    const rows = parseSheetRowsFromGviz(rawText);
+    items = rows.map(normalizeProductRow).filter(Boolean);
+  }
+
+  if (!items.length) {
     throw new Error("Catalog JSON is empty or malformed.");
   }
 
-  return data.map((item, index) => ({
-    ...item,
-    sku: item.sku || item.id,
-    featuredOrder: index,
-    variantOf: item.sku || item.id,
-    variantIndex: 1,
-    variantCount: 1
-  }));
+  return items.map((item, index) => {
+    const sku = item.sku || item.id;
+    return {
+      ...item,
+      id: item.id || sku,
+      sku,
+      image: item.image || getAssetImageForSku(sku),
+      featuredOrder: index,
+      variantOf: sku,
+      variantIndex: 1,
+      variantCount: 1
+    };
+  });
 }
 
 function refreshCatalogData(items) {
@@ -298,7 +326,7 @@ function renderProducts() {
       const card = document.createElement("article");
       card.className = "product-card";
       card.innerHTML = `
-        <img src="${product.image}" alt="${product.name}">
+        <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}';">
         <div class="content">
           <h3>${product.name}</h3>
           <p class="meta">${product.category}${product.type ? ` • ${product.type}` : ""}</p>
