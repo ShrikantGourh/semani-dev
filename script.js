@@ -2,7 +2,25 @@ AOS.init();
 
 const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzF4A6XBvsApmRnVX8hxjkRsflbA-n70Mvdc2hWxUN-bukf2-I0vWzpPynWjBlznOFS5Q/exec";
 const CATALOG_URL = "assets/products/catalog.json";
-const TARGET_CATALOG_SIZE = 4000;
+
+/**
+ * Data source priority:
+ * 1) Google Sheet + Google Drive (when configured)
+ * 2) Local JSON fallback (assets/products/catalog.json)
+ */
+const GOOGLE_SHEET_PRODUCTS = {
+  enabled: false,
+  sheetId: "",
+  sheetName: "Sheet1"
+};
+
+const GOOGLE_DRIVE_IMAGES = {
+  enabled: false,
+  apiKey: "",
+  rootFolderId: ""
+};
+
+const FALLBACK_IMAGE = "assets/products/pearl-drop-earrings.svg";
 
 const catalogueState = {
   query: "",
@@ -12,33 +30,179 @@ const catalogueState = {
   pageSize: 40
 };
 
-let baseCatalog = [];
 let productCatalog = [];
 let productById = new Map();
 let filteredProducts = [];
 let cart = JSON.parse(localStorage.getItem("seemaniCart")) || [];
 
-function buildCatalog(items, targetSize) {
-  const built = [];
-
-  for (let i = 0; i < targetSize; i += 1) {
-    const base = items[i % items.length];
-    const variation = Math.floor(i / items.length) + 1;
-    const priceOffset = (variation % 5) * 75;
-
-    built.push({
-      ...base,
-      id: `${base.id}-${variation}`,
-      name: `${base.name} #${variation}`,
-      price: Number(base.price) + priceOffset,
-      featuredOrder: i
-    });
-  }
-
-  return built;
+function getStringCell(value) {
+  if (value === null || value === undefined) return "";
+  return String(value).trim();
 }
 
-async function loadBaseCatalog() {
+function getNumberCell(value, fallback = 0) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function driveFileToPublicImageUrl(fileId) {
+  return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
+}
+
+function normalizeProductRow(row) {
+  const sku = getStringCell(row.sku || row.SKU || row.id || row.ID);
+  if (!sku) return null;
+
+  const name = getStringCell(row.productName || row["Product Name"] || row.name || sku);
+  const category = getStringCell(row.productCategory || row["Product Catagory"] || row["Product Category"] || row.category || "Uncategorized");
+  const type = getStringCell(row.type || row.Type);
+  const marketPrice = getNumberCell(row.marketPrice || row["Market Price"] || row.price, 0);
+  const quantity = getNumberCell(row.quantity || row.Quantity, 0);
+  const extraDeliveryCharges = getNumberCell(row.extraDeliveryCharges || row["Extra Delivery charges"] || 0, 0);
+
+  return {
+    id: sku,
+    sku,
+    name: name || sku,
+    category,
+    type,
+    quantity,
+    price: marketPrice,
+    extraDeliveryCharges,
+    image: FALLBACK_IMAGE,
+    featuredOrder: 0,
+    variantOf: null,
+    variantIndex: 1,
+    variantCount: 1
+  };
+}
+
+function parseSheetRowsFromGviz(rawText) {
+  const start = rawText.indexOf("{");
+  const end = rawText.lastIndexOf("}");
+  if (start === -1 || end === -1) {
+    throw new Error("Unexpected Google Sheet response format.");
+  }
+
+  const jsonText = rawText.slice(start, end + 1);
+  const data = JSON.parse(jsonText);
+  const cols = data?.table?.cols || [];
+  const rows = data?.table?.rows || [];
+
+  const keys = cols.map((col, index) => {
+    const label = getStringCell(col.label);
+    if (label) return label;
+    const id = getStringCell(col.id);
+    return id || `column_${index}`;
+  });
+
+  return rows.map((row) => {
+    const mapped = {};
+    (row.c || []).forEach((cell, index) => {
+      mapped[keys[index]] = cell?.v ?? "";
+    });
+    return mapped;
+  });
+}
+
+async function loadSheetProducts() {
+  const params = new URLSearchParams({
+    tqx: "out:json",
+    sheet: GOOGLE_SHEET_PRODUCTS.sheetName
+  });
+
+  const sheetUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_PRODUCTS.sheetId}/gviz/tq?${params.toString()}`;
+  const response = await fetch(sheetUrl, { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error("Unable to load product rows from Google Sheet.");
+  }
+
+  const rawText = await response.text();
+  const rows = parseSheetRowsFromGviz(rawText);
+
+  return rows
+    .map(normalizeProductRow)
+    .filter(Boolean)
+    .map((item, index) => ({ ...item, featuredOrder: index }));
+}
+
+async function loadSkuImageMapFromDrive() {
+  const folderListQuery = `'${GOOGLE_DRIVE_IMAGES.rootFolderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`;
+  const folderUrl = new URL("https://www.googleapis.com/drive/v3/files");
+  folderUrl.searchParams.set("key", GOOGLE_DRIVE_IMAGES.apiKey);
+  folderUrl.searchParams.set("fields", "files(id,name)");
+  folderUrl.searchParams.set("q", folderListQuery);
+  folderUrl.searchParams.set("pageSize", "1000");
+
+  const folderResponse = await fetch(folderUrl.toString(), { cache: "no-store" });
+  if (!folderResponse.ok) {
+    throw new Error("Unable to list SKU folders from Google Drive.");
+  }
+
+  const folderData = await folderResponse.json();
+  const skuFolders = folderData.files || [];
+
+  const skuImageEntries = await Promise.all(
+    skuFolders.map(async (folder) => {
+      const fileQuery = `'${folder.id}' in parents and mimeType contains 'image/' and trashed = false`;
+      const imageUrl = new URL("https://www.googleapis.com/drive/v3/files");
+      imageUrl.searchParams.set("key", GOOGLE_DRIVE_IMAGES.apiKey);
+      imageUrl.searchParams.set("fields", "files(id,name),nextPageToken");
+      imageUrl.searchParams.set("q", fileQuery);
+      imageUrl.searchParams.set("orderBy", "name");
+      imageUrl.searchParams.set("pageSize", "1000");
+
+      const imageResponse = await fetch(imageUrl.toString(), { cache: "no-store" });
+      if (!imageResponse.ok) {
+        return [folder.name, []];
+      }
+
+      const imageData = await imageResponse.json();
+      const images = (imageData.files || []).map((file) => ({
+        id: file.id,
+        name: file.name,
+        url: driveFileToPublicImageUrl(file.id)
+      }));
+
+      return [folder.name, images];
+    })
+  );
+
+  return new Map(skuImageEntries);
+}
+
+function applyDriveImagesAsVariants(products, skuImageMap) {
+  const expanded = [];
+
+  products.forEach((product, index) => {
+    const images = skuImageMap.get(product.sku) || [];
+
+    if (!images.length) {
+      expanded.push({ ...product, featuredOrder: expanded.length || index });
+      return;
+    }
+
+    const variantCount = images.length;
+
+    images.forEach((image, imageIndex) => {
+      expanded.push({
+        ...product,
+        id: variantCount > 1 ? `${product.sku}-v${imageIndex + 1}` : product.sku,
+        name: variantCount > 1 ? `${product.name} (Variant ${imageIndex + 1})` : product.name,
+        image: image.url,
+        variantOf: product.sku,
+        variantIndex: imageIndex + 1,
+        variantCount,
+        featuredOrder: expanded.length
+      });
+    });
+  });
+
+  return expanded;
+}
+
+async function loadBaseCatalogFromJson() {
   const response = await fetch(CATALOG_URL, { cache: "no-store" });
   if (!response.ok) {
     throw new Error("Unable to load product catalog JSON.");
@@ -49,11 +213,18 @@ async function loadBaseCatalog() {
     throw new Error("Catalog JSON is empty or malformed.");
   }
 
-  return data;
+  return data.map((item, index) => ({
+    ...item,
+    sku: item.sku || item.id,
+    featuredOrder: index,
+    variantOf: item.sku || item.id,
+    variantIndex: 1,
+    variantCount: 1
+  }));
 }
 
-function refreshCatalogData() {
-  productCatalog = buildCatalog(baseCatalog, TARGET_CATALOG_SIZE);
+function refreshCatalogData(items) {
+  productCatalog = items;
   productById = new Map(productCatalog.map((product) => [product.id, product]));
   filteredProducts = productCatalog;
 }
@@ -81,7 +252,8 @@ function applyFilters() {
   const query = catalogueState.query.trim().toLowerCase();
 
   filteredProducts = productCatalog.filter((product) => {
-    const queryMatch = !query || product.name.toLowerCase().includes(query);
+    const textBlob = `${product.name} ${product.sku || ""} ${product.type || ""}`.toLowerCase();
+    const queryMatch = !query || textBlob.includes(query);
     const categoryMatch = catalogueState.category === "all" || product.category === catalogueState.category;
     return queryMatch && categoryMatch;
   });
@@ -128,7 +300,8 @@ function renderProducts() {
         <img src="${product.image}" alt="${product.name}">
         <div class="content">
           <h3>${product.name}</h3>
-          <p class="meta">${product.category}</p>
+          <p class="meta">${product.category}${product.type ? ` • ${product.type}` : ""}</p>
+          <p class="meta">SKU: ${product.sku}</p>
           <p class="price">₹${product.price}</p>
           <div class="qty-controls card-qty" role="group" aria-label="Quantity picker for ${product.name}">
             <button class="qty-btn" type="button" onclick="changeCardQuantity('${product.id}', -1)">−</button>
@@ -395,13 +568,28 @@ function setupCheckoutForm() {
   });
 }
 
+async function loadRuntimeCatalog() {
+  if (!GOOGLE_SHEET_PRODUCTS.enabled || !GOOGLE_SHEET_PRODUCTS.sheetId) {
+    return loadBaseCatalogFromJson();
+  }
+
+  const sheetProducts = await loadSheetProducts();
+
+  if (!GOOGLE_DRIVE_IMAGES.enabled || !GOOGLE_DRIVE_IMAGES.apiKey || !GOOGLE_DRIVE_IMAGES.rootFolderId) {
+    return sheetProducts;
+  }
+
+  const skuImageMap = await loadSkuImageMapFromDrive();
+  return applyDriveImagesAsVariants(sheetProducts, skuImageMap);
+}
+
 async function initializeApp() {
   try {
     const needsCatalog = Boolean(document.getElementById("productGrid"));
 
     if (needsCatalog) {
-      baseCatalog = await loadBaseCatalog();
-      refreshCatalogData();
+      const runtimeCatalog = await loadRuntimeCatalog();
+      refreshCatalogData(runtimeCatalog);
       updateCategoryFilter();
     }
 
@@ -414,7 +602,7 @@ async function initializeApp() {
     console.error(error);
     const catalogMeta = document.getElementById("catalogMeta");
     if (catalogMeta) {
-      catalogMeta.textContent = "Failed to load catalogue. Please check assets/products/catalog.json.";
+      catalogMeta.textContent = "Failed to load catalogue. Check Google Sheet/Drive config or assets/products/catalog.json.";
     }
   }
 }
