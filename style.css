@@ -522,13 +522,21 @@ body.modal-open {
   background: #fff;
   border: 1px solid #ede4d1;
   box-shadow: 0 8px 24px rgba(184, 155, 94, 0.12);
+  aspect-ratio: 1 / 1;
 }
 
 .product-gallery-item img {
   width: 100%;
-  height: 260px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
   display: block;
+  transition: transform 0.35s ease;
+  transform-origin: center center;
+}
+
+.product-gallery-item:hover img {
+  transform: scale(1.15);
 }
 
 .product-detail-content {

@@ -142,11 +142,16 @@ function getFileNameFromPath(path) {
 
 function getVariantLabelFromImageName(name, index = 0) {
   const baseName = getStringCell(name).replace(/\.[^.]+$/, "").trim();
-  if (/^dummy(?:\s+product)?\s+image$/i.test(baseName)) {
-    return `Variant ${index + 1}`;
+  if (!baseName) return "Default";
+  if (/^(?:dummy(?:\s+product)?\s+image|placeholder|image)$/i.test(baseName)) {
+    return "Default";
   }
-  if (!baseName) return `Variant ${index + 1}`;
   return baseName;
+}
+
+function hasMeaningfulVariantLabel(label) {
+  const normalized = getStringCell(label).trim().toLowerCase();
+  return Boolean(normalized && normalized !== "default" && normalized !== "image" && normalized !== "placeholder");
 }
 
 function normalizeAssetUrl(path) {
@@ -194,6 +199,9 @@ function buildVariantsFromImageUrls(imageUrls) {
 
   return uniqueUrls.map((url, index) => {
     const fileName = getFileNameFromPath(url);
+    if (url.includes("/placeholder.svg")) {
+      return { id: "default", label: "Default", image: FALLBACK_IMAGE };
+    }
     const label = getVariantLabelFromImageName(fileName, index);
     const safeVariantId = toSlug(label) || `variant-${index + 1}`;
 
@@ -212,7 +220,8 @@ function getSelectedVariant(product) {
 }
 
 function getProductNameWithVariant(product, variant) {
-  if (!variant || !variant.label || variant.label.toLowerCase() === "default") {
+  const variantCount = Array.isArray(product?.variants) ? product.variants.length : 0;
+  if (!variant || variantCount <= 1 || !hasMeaningfulVariantLabel(variant.label)) {
     return product.name;
   }
   return `${product.name} (${variant.label})`;
