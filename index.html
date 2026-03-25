@@ -2,152 +2,151 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Seemani | Artificial Jewellery Store</title>
-  <link rel="icon" type="image/png" href="assets/seemani-logo-blue.png" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <title>Seemani | Futuristic Jewellery Marketing</title>
+  <link rel="icon" type="image/png" href="assets/seemani-logo-blue.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="bg-grid" aria-hidden="true"></div>
 
-<header class="nav">
-  <a href="#" class="brand" aria-label="Seemani home">
-    <img src="assets/seemani-logo-blue.png" alt="Seemani logo" onerror="this.onerror=null;this.src='assets/seemani-logo-blue.png';">
-    <span>SEEMANI</span>
-  </a>
-  <div class="nav-actions">
-    <button id="cartToggleBtn" class="nav-cart-btn" type="button">Cart (0)</button>
-    <button id="navMenuToggle" class="nav-menu-toggle" type="button" aria-expanded="false" aria-controls="topNavLinks" aria-label="Toggle navigation menu">☰</button>
-  </div>
-  <nav id="topNavLinks">
-    <a href="#catalog">Catalogue</a>
-    <a href="#checkout">Checkout</a>
-    <a data-whatsapp-channel-link href="https://wa.me/message/JJIVVOZGZ4LHL1">WhatsApp Chat</a>
-    <a href="#founder">Founder</a>
-    <a href="#social">Instagram</a>
-  </nav>
-</header>
+  <header class="nav">
+    <a href="#top" class="brand" aria-label="Seemani Home">
+      <img src="assets/seemani-logo-blue.png" alt="Seemani logo">
+      <span>SEEMANI</span>
+    </a>
 
-<section class="hero">
-  <div class="hero-content">
-    <img class="hero-logo" src="assets/seemani-logo-blue.png" alt="Seemani brand logo" data-aos="fade-up" onerror="this.onerror=null;this.src='assets/seemani-logo-blue.png';">
-    <h1 data-aos="fade-up">Adorn Your Everyday with a Touch of Grace</h1>
-    <p data-aos="fade-up">Affordable • Stylish • Ready to Ship</p>
-    <a href="#catalog" class="btn-main">Shop Now</a>
-  </div>
-</section>
+    <button id="menuBtn" class="menu-btn" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu">☰</button>
 
-<section id="catalog" class="catalog">
-  <h2 data-aos="fade-up">Product Catalogue</h2>
+    <nav id="navLinks">
+      <a href="#products">Products</a>
+      <a href="#vision">Vision</a>
+      <a href="#videos">Videos</a>
+      <a href="#instagram">Instagram</a>
+      <a href="#order" class="nav-cta">Order</a>
+    </nav>
+  </header>
 
-  <div class="catalog-controls" data-aos="fade-up">
-    <input id="searchInput" type="search" placeholder="Search product name...">
-    <select id="categoryFilter" aria-label="Filter by category"></select>
-    <select id="sortSelect" aria-label="Sort products">
-      <option value="featured">Sort: Featured</option>
-      <option value="price-asc">Price: Low to High</option>
-      <option value="price-desc">Price: High to Low</option>
-      <option value="name-asc">Name: A to Z</option>
-      <option value="name-desc">Name: Z to A</option>
-    </select>
-    <select id="pageSizeSelect" aria-label="Products per page">
-      <option value="20">20 / page</option>
-      <option value="40" selected>40 / page</option>
-      <option value="80">80 / page</option>
-    </select>
-  </div>
-
-  <p id="catalogMeta" class="catalog-meta" data-aos="fade-up"></p>
-  <div id="productGrid" class="product-grid" data-aos="fade-up"></div>
-
-  <div class="pagination" data-aos="fade-up">
-    <button id="prevPageBtn" class="btn-secondary" type="button">Previous</button>
-    <span id="pageIndicator">Page 1</span>
-    <button id="nextPageBtn" class="btn-secondary" type="button">Next</button>
-  </div>
-</section>
-
-<section id="productDetail" class="product-detail-modal product-detail-hidden" aria-hidden="true">
-  <div id="productDetailOverlay" class="product-detail-overlay" role="presentation"></div>
-  <div class="product-detail-shell" role="dialog" aria-modal="true" aria-label="Product details" data-aos="fade-up">
-    <button id="productDetailCloseBtn" class="product-detail-close" type="button" aria-label="Close product details">×</button>
-    <div id="productDetailBody"></div>
-  </div>
-</section>
-
-<section id="cart" class="cart-section cart-hidden" aria-hidden="true">
-  <h2 data-aos="fade-up">Your Cart</h2>
-  <div class="cart-wrapper" data-aos="fade-up">
-    <ul id="cartItems" class="cart-items"></ul>
-    <div class="cart-summary">
-      <p>Items: <span id="cartCount">0</span></p>
-      <p>Total: ₹<span id="cartTotal">0</span></p>
-      <div class="coupon-row">
-        <input id="couponInput" type="text" placeholder="Coupon code">
-        <button id="pasteCouponBtn" class="btn-secondary" type="button">Paste</button>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Future-ready Jewellery Showcase</p>
+        <h1>High-Tech Sparkle, Crafted for Everyday Glamour.</h1>
+        <p class="hero-text">
+          Seemani is now focused as a pure product-marketing experience: discover signature collections,
+          watch real product videos, and move directly to instant ordering via Instagram or WhatsApp.
+        </p>
+        <div class="hero-actions">
+          <a href="#products" class="btn btn-primary">Explore Products</a>
+          <a href="#order" class="btn btn-ghost">Start Order</a>
+        </div>
       </div>
-      <button class="btn-main" onclick="goToCheckout()">Proceed to Checkout</button>
-      <button class="btn-secondary" onclick="clearCart()">Clear Cart</button>
-    </div>
-  </div>
-</section>
+      <div class="hero-orb" aria-hidden="true"></div>
+    </section>
 
-<section id="checkout" class="checkout-section">
-  <h2 data-aos="fade-up">Checkout</h2>
-  <form id="orderForm" data-aos="fade-up">
-    <input type="text" id="name" placeholder="Full Name" required>
-    <input type="tel" id="phone" placeholder="Mobile Number" required>
-    <textarea id="address" placeholder="Delivery Address" required></textarea>
-    <div id="checkoutProducts" class="checkout-products"></div>
-    <button type="submit" class="btn-main">Place Order</button>
-    <p id="orderStatus" class="section-note"></p>
-  </form>
-  <iframe name="hidden_iframe" style="display:none;"></iframe>
-</section>
+    <section id="products" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Featured Lineup</p>
+        <h2>Products That Define the Seemani Look</h2>
+      </div>
 
-<section id="founder" class="founder">
-  <h2 data-aos="fade-up">Meet Our Founder</h2>
-  <div class="founder-box" data-aos="fade-up">
-    <img class="founder-photo" src="assets/founder-saloni-gourh.svg" alt="Saloni Gourh, founder of Seemani">
-    <div>
-      <h3>Saloni Gourh</h3>
-      <p>
-        Saloni Gourh, founder of Seemani, started the brand with a simple idea, beautiful accessories
-        shouldn’t come with a heavy price tag.
-      </p>
-      <p>
-        With a deep love for jewellery and styling, she created Seemani to offer hair accessories
-        that look luxurious, feel premium, and remain affordable. Every piece is thoughtfully curated
-        to combine elegance, durability, and comfort, so anyone can elevate their look effortlessly.
-      </p>
-      <p>
-        At Seemani, the goal is clear: top-notch quality, timeless designs, and prices that never
-        burn your pocket.
-      </p>
-    </div>
-  </div>
-</section>
+      <div class="product-grid">
+        <article class="product-card">
+          <img src="assets/products/JW-001/Pink & Green.jpg" alt="Seemani floral statement set">
+          <div>
+            <h3>Floral Statement Set</h3>
+            <p>Color-rich, celebration-first design with premium stone detailing for standout styling.</p>
+          </div>
+        </article>
 
-<section id="social" class="instagram">
-  <h2 data-aos="fade-up">Instagram Reels</h2>
-  <p class="section-note" data-aos="fade-up">Watch our latest jewellery styling reel.</p>
-  <iframe
-    src="https://www.instagram.com/reel/DU92TGLlA4w/embed"
-    width="320"
-    height="420"
-    frameborder="0"
-    allowfullscreen
-    loading="lazy">
-  </iframe>
-</section>
+        <article class="product-card">
+          <img src="assets/products/JW-004/Green.jpg" alt="Seemani green luxe set">
+          <div>
+            <h3>Emerald Luxe Jewellery</h3>
+            <p>Minimal weight, rich shine, and a modern silhouette built for long festive wear.</p>
+          </div>
+        </article>
 
-<footer>
-  <p>© 2026 Seemani.in | All Rights Reserved</p>
-</footer>
+        <article class="product-card">
+          <img src="assets/products/JW-008/JW-008.jpg" alt="Seemani kundan bridal set">
+          <div>
+            <h3>Kundan Bridal Signature</h3>
+            <p>Detailed craftsmanship with a regal look that performs beautifully on camera.</p>
+          </div>
+        </article>
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="script.js"></script>
+        <article class="product-card">
+          <img src="assets/products/JW-010/Peacock Green.jpg" alt="Seemani peacock green jewellery set">
+          <div>
+            <h3>Peacock Green Collection</h3>
+            <p>Vibrant tones and futuristic finish designed for reels, weddings, and festive campaigns.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="vision" class="section vision">
+      <div class="section-head">
+        <p class="eyebrow">Vision for Orders</p>
+        <h2>Fast Discovery. Instant Conversation. Confident Ordering.</h2>
+      </div>
+      <div class="vision-grid">
+        <article>
+          <h3>1. Discover</h3>
+          <p>Browse high-impact product visuals and short videos optimized for quick product selection.</p>
+        </article>
+        <article>
+          <h3>2. Decide</h3>
+          <p>Share your preferred product code, color, and quantity through direct social channels.</p>
+        </article>
+        <article>
+          <h3>3. Order</h3>
+          <p>Complete orders with assisted confirmation over WhatsApp for a personal shopping flow.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="videos" class="section">
+      <div class="section-head">
+        <p class="eyebrow">Product Videos</p>
+        <h2>Watch Product Reels in Motion</h2>
+      </div>
+      <div class="video-grid">
+        <iframe src="https://www.instagram.com/reel/DU92TGLlA4w/embed" title="Seemani Reel 1" loading="lazy" allowfullscreen></iframe>
+        <iframe src="https://www.instagram.com/reel/DXbFiDNTiU0/embed" title="Seemani Reel 2" loading="lazy" allowfullscreen></iframe>
+        <iframe src="https://www.instagram.com/reel/Dc0kZ8Ty4k2/embed" title="Seemani Reel 3" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <section id="instagram" class="section social">
+      <div class="section-head">
+        <p class="eyebrow">Instagram Page</p>
+        <h2>Follow Seemani for Daily Drops & Styling Videos</h2>
+      </div>
+      <p class="social-text">Get new arrivals, festive launches, and video-first previews directly on Instagram.</p>
+      <a class="btn btn-primary" href="https://www.instagram.com/seemani.in/" target="_blank" rel="noopener noreferrer">Open Instagram Page</a>
+    </section>
+
+    <section id="order" class="section order">
+      <div class="section-head">
+        <p class="eyebrow">Order Now</p>
+        <h2>Start Your Order Conversation</h2>
+      </div>
+      <p class="order-text">Send screenshot(s) + product name to place your order quickly with the Seemani team.</p>
+      <div class="order-actions">
+        <a class="btn btn-primary" href="https://wa.me/message/JJIVVOZGZ4LHL1" target="_blank" rel="noopener noreferrer">Order on WhatsApp</a>
+        <a class="btn btn-ghost" href="https://www.instagram.com/seemani.in/" target="_blank" rel="noopener noreferrer">DM on Instagram</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Seemani.in · Futuristic Product Marketing Experience</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
