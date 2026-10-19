@@ -386,7 +386,6 @@ function applyDriveImagesAsVariants(products, skuImageMap) {
   });
 }
 
-
 async function loadBaseCatalogFromJson() {
   await loadLocalImageManifest();
 
@@ -547,10 +546,10 @@ function renderProducts() {
           ${
             cartQty > 0
               ? `<div class="qty-controls card-qty" role="group" aria-label="Quantity picker for ${displayName}" onclick="event.stopPropagation()">
-                   <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${cartProductId}', -1)">−</button>
-                   <span class="qty-value" id="qty-${cartProductId}">${cartQty}</span>
-                   <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${cartProductId}', 1)">+</button>
-                 </div>`
+                    <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${cartProductId}', -1)">−</button>
+                    <span class="qty-value" id="qty-${cartProductId}">${cartQty}</span>
+                    <button class="qty-btn" type="button" onclick="event.stopPropagation();changeProductCardCartQuantity('${cartProductId}', 1)">+</button>
+                  </div>`
               : `<button class="btn-main" type="button" onclick="event.stopPropagation();addToCart('${product.id}')">Add to Cart</button>`
           }
         </div>
@@ -1001,6 +1000,29 @@ function setupWhatsAppChatLinks() {
   });
 }
 
+function setupPopularSearchLinks() {
+  const links = document.querySelectorAll("[data-search-term]");
+  links.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      const term = link.dataset.searchTerm || "";
+      const searchInput = document.getElementById("searchInput");
+      const catalogSection = document.getElementById("catalog");
+
+      if (searchInput) {
+        searchInput.value = term;
+      }
+      catalogueState.query = term;
+      catalogueState.page = 1;
+      renderProducts();
+
+      if (catalogSection) {
+        catalogSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+}
+
 function setupMobileNavMenu() {
   const navShell = document.querySelector(".nav");
   const menuToggle = document.getElementById("navMenuToggle");
@@ -1037,6 +1059,114 @@ function setupMobileNavMenu() {
   });
 }
 
+function appendJsonLd(tagId, payload) {
+  const existing = document.getElementById(tagId);
+  if (existing) {
+    existing.remove();
+  }
+
+  const script = document.createElement("script");
+  script.type = "application/ld+json";
+  script.id = tagId;
+  script.textContent = JSON.stringify(payload);
+  document.head.appendChild(script);
+}
+
+function injectSeoPageSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "Seemani",
+        "url": "https://seemani.in/",
+        "logo": "https://seemani.in/assets/seemani-logo-blue.png",
+        "sameAs": ["https://www.instagram.com/"]
+      },
+      {
+        "@type": "WebSite",
+        "name": "Seemani",
+        "url": "https://seemani.in/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://seemani.in/#catalog?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://seemani.in/" },
+          { "@type": "ListItem", "position": 2, "name": "Artificial Jewellery", "item": "https://seemani.in/#catalog" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What types of artificial jewellery does Seemani offer?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Seemani offers affordable artificial jewellery including Kashmiri jhumkas, oxidized earrings, choker sets, and handcrafted statement accessories for everyday and occasion wear."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Seemani jewellery available online in India?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, Seemani offers online jewellery shopping across India with affordable pricing and stylish designs made for gifting, festive wear, and daily styling."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Seemani sell affordable fashion jewellery?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, Seemani focuses on premium-looking artificial jewellery at prices that make it easy to refresh your wardrobe without overspending."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  appendJsonLd("seemani-page-schema", schema);
+}
+
+function buildProductSchema(product) {
+  const itemImages = Array.isArray(product.images) && product.images.length > 0
+    ? product.images.slice(0, 5)
+    : [product.image || FALLBACK_IMAGE];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "sku": product.sku || product.id,
+    "brand": {
+      "@type": "Brand",
+      "name": "Seemani"
+    },
+    "category": product.category || "Artificial Jewellery",
+    "description": product.description || `${product.name} is a stylish ${product.category || "artificial jewellery"} piece from Seemani.`,
+    "image": itemImages,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": String(product.price || 0),
+      "availability": "https://schema.org/InStock",
+      "url": "https://seemani.in/"
+    }
+  };
+}
+
+function injectProductSchemas() {
+  const products = (productCatalog || []).slice(0, 8).map(buildProductSchema);
+  appendJsonLd("seemani-product-schema", products);
+}
+
 async function loadRuntimeCatalog() {
   if (!GOOGLE_SHEET_PRODUCTS.enabled || !GOOGLE_SHEET_PRODUCTS.sheetId) {
     return loadBaseCatalogFromJson();
@@ -1060,12 +1190,15 @@ async function initializeApp() {
       const runtimeCatalog = await loadRuntimeCatalog();
       refreshCatalogData(runtimeCatalog);
       updateCategoryFilter();
+      injectProductSchemas();
     }
 
+    injectSeoPageSchema();
     setupCatalogControls();
     setupCartTools();
     setupCheckoutForm();
     setupWhatsAppChatLinks();
+    setupPopularSearchLinks();
     setupMobileNavMenu();
     renderProducts();
     renderCart();
@@ -1104,3 +1237,231 @@ function selectProductVariant(productId, variantId, refreshDetail) {
 }
 
 window.selectProductVariant = selectProductVariant;
+
+// SEO helper: allow catalog links to drive a search-friendly experience.
+window.handlePopularSearch = function handlePopularSearch(searchTerm) {
+  if (!searchTerm) return;
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.value = searchTerm;
+  }
+  catalogueState.query = searchTerm;
+  catalogueState.page = 1;
+  renderProducts();
+
+  const catalogSection = document.getElementById("catalog");
+  catalogSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+window.parseProductSeo = function parseProductSeo() {
+  return (productCatalog || []).slice(0, 8).map(buildProductSchema);
+};
+
+window.injectProductSchemas = injectProductSchemas;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
