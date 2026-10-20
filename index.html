@@ -15,6 +15,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="gifts/store.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config={theme:{extend:{colors:{blush:{50:'#fff5f7',100:'#fee7ec',200:'#fcd3de',300:'#f8a5bc',400:'#f36f94',500:'#eb4270',600:'#d92657'},cream:{50:'#fcfbfa',100:'#f7f4f0',200:'#ede7de',300:'#dfd4c5'},lavender:{50:'#fbf9fc',100:'#f4eff6',200:'#e8def0'}},fontFamily:{serif:['"Cormorant Garamond"','serif'],sans:['"Plus Jakarta Sans"','sans-serif']},animation:{float:'float 6s ease-in-out infinite','pulse-slow':'pulse 4s cubic-bezier(0.4,0,0.6,1) infinite'},keyframes:{float:{'0%,100%':{transform:'translateY(0px)'},'50%':{transform:'translateY(-12px)'}}}}}};
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style id="dussehra-gif-layout-hotfix">
     /* A shared GIF wish is a static card layout, never the scroll-stage overlay. */
     #dussehra-story.gif-wish .dussehra-sticky {
@@ -76,29 +83,149 @@
 }
 </style>
 
+
+<style id="reference-homepage-theme">
+body{font-family:'Plus Jakarta Sans',sans-serif!important;background:linear-gradient(135deg,#fff5f7 0%,#fcfbfa 50%,#f4eff6 100%)!important;color:#4a4043}
+.font-serif{font-family:'Cormorant Garamond',serif!important}
+.glass-card{background:rgba(255,255,255,.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.8)}
+.glass-pill{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border:1px solid rgba(248,165,188,.3)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal.active{opacity:1;transform:translateY(0)}
+.reference-header{box-shadow:0 3px 24px rgba(100,60,75,.035)}
+.reference-nav a{white-space:nowrap}
+.reference-nav.mobile-open{display:flex!important;position:absolute;top:100%;left:12px;right:12px;padding:12px;background:rgba(255,255,255,.97);border:1px solid #fee7ec;border-radius:20px;box-shadow:0 18px 40px rgba(80,40,60,.12);flex-direction:column;align-items:stretch;gap:4px}
+.reference-nav.mobile-open a{padding:12px;border-radius:12px}
+#main-navigation a:hover{background-color:rgba(255,245,247,.7)}
+.announcement-spacer{height:1px}
+.collections.section-wrap,.how.section-wrap{width:min(1200px,calc(100% - 32px));margin-left:auto;margin-right:auto}
+.collections{padding-top:4rem;padding-bottom:5rem}
+.collections .section-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:2rem}
+.collections .eyebrow,.how .eyebrow,.closing .eyebrow{color:#eb4270;letter-spacing:.18em;font-size:10px;font-weight:700;text-transform:uppercase}
+.collections h2,.how h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2.3rem,5vw,3.5rem);font-weight:500;line-height:1.05;color:#262126}
+.collections h2 em,.how h2 em,.closing h2 em{color:#eb4270;font-weight:400}
+.collections .section-intro{max-width:340px;color:#6b6267;font-size:13px;line-height:1.8}
+.collections .toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:2rem;flex-wrap:wrap}
+.collections .filters{display:flex;flex-wrap:wrap;gap:8px}
+.collections .filter{border-radius:999px;padding:10px 18px;background:rgba(255,255,255,.8);border:1px solid #fee7ec;color:#6b6267;font-size:11px;font-weight:700;transition:all .2s}
+.collections .filter.active,.collections .filter:hover{background:#292329;color:white;border-color:#292329}
+.collections .search{display:flex;align-items:center;gap:8px;border-radius:999px;border:1px solid #fcd3de;background:rgba(255,255,255,.78);padding:9px 15px;min-width:220px;color:#eb4270}
+.collections .search input{background:transparent;border:0;outline:0;min-width:0;width:100%;font:inherit;font-size:12px;color:#4a4043}
+.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.product-card{background:rgba(255,255,255,.75);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.9);border-radius:30px;overflow:hidden;box-shadow:0 12px 36px rgba(80,50,60,.08);display:flex;flex-direction:column;min-width:0;transition:transform .3s,box-shadow .3s}
+.product-card:hover{transform:translateY(-5px);box-shadow:0 22px 50px rgba(80,50,60,.13)}
+.product-art{height:240px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.product-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.86}
+.product-label{position:absolute;top:15px;left:15px;z-index:2;background:rgba(255,255,255,.92);padding:7px 11px;border-radius:999px;font-size:10px;font-weight:700;color:#4a4043;border:1px solid #fee7ec}
+.product-emoji{position:relative;z-index:1;font-size:50px;filter:drop-shadow(0 6px 12px rgba(80,40,60,.12))}
+.product-info{padding:22px 22px 18px;display:flex;flex-direction:column;flex:1}
+.product-info h3{font-family:'Cormorant Garamond',serif;font-size:25px;line-height:1.15;font-weight:600;color:#292329}
+.product-info p{font-size:12px;line-height:1.8;color:#6b6267;margin-top:8px;flex:1}
+.product-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid rgba(248,165,188,.25);margin-top:18px;padding-top:15px}
+.product-bottom .price{font-size:12px;font-weight:700;color:#292329}
+.product-bottom .price.free{color:#eb4270}
+.product-link{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:9px 13px;background:#fff5f7;color:#d92657;font-size:10px;font-weight:700;text-align:center}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.step{position:relative;background:rgba(255,255,255,.76);backdrop-filter:blur(12px);border:1px solid white;border-radius:32px;padding:30px;box-shadow:0 12px 36px rgba(80,50,60,.07);transition:transform .3s}
+.step:hover{transform:translateY(-5px)}
+.step-number{font-size:10px;font-weight:800;letter-spacing:.16em;color:#eb4270}
+.step-icon{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,#f36f94,#fcd3de);display:flex;align-items:center;justify-content:center;font-size:24px;margin:18px 0}
+.step h3{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;color:#292329;margin-bottom:8px}
+.step p{font-size:12px;line-height:1.8;color:#6b6267}
+.how{padding-top:4rem;padding-bottom:5rem}
+.how .section-heading{margin-bottom:2rem}
+.closing{position:relative;overflow:hidden;text-align:center;width:min(1000px,calc(100% - 32px));margin:1rem auto 5rem;padding:clamp(38px,7vw,72px) 20px;border-radius:48px;border:1px solid white;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,245,247,.65));box-shadow:0 24px 70px rgba(80,50,60,.1)}
+.closing h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.05;font-weight:500;color:#292329;margin:10px 0 24px}
+.closing .primary-btn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:linear-gradient(90deg,#eb4270,#d92657);color:white;padding:14px 26px;border-radius:999px;font-size:13px;font-weight:600;box-shadow:0 12px 28px rgba(235,66,112,.22)}
+footer{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:24px max(20px,calc((100vw - 1200px)/2));background:rgba(255,255,255,.65);border-top:1px solid #fee7ec;color:#6b6267;font-size:11px}
+@media(max-width:767px){
+ .reference-nav{display:none}
+ .reference-nav.mobile-open{display:flex!important}
+ .collections .section-heading{align-items:flex-start;flex-direction:column}
+ .collections .section-intro{max-width:520px}
+ .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .product-art{height:clamp(145px,38vw,220px)}
+ .product-info{padding:14px}
+ .product-info h3{font-size:20px}
+ .product-bottom{align-items:flex-start;flex-direction:column}
+ .product-link{max-width:100%}
+ .steps{grid-template-columns:1fr}
+ .closing{border-radius:30px}
+ footer{justify-content:center;text-align:center}
+}
+@media(max-width:430px){
+ .product-grid{grid-template-columns:1fr}
+ .product-art{height:220px}
+ .product-info{padding:18px}
+ .product-info h3{font-size:23px}
+ .product-bottom{flex-direction:row;align-items:center}
+ .collections .filters{gap:6px}
+ .collections .filter{padding:9px 12px;font-size:10px}
+ .collections .search{width:100%;min-width:0}
+}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="./" aria-label="Seemani home"><span class="brand-mark">S</span><span>seemani<span class="brand-dot">.</span></span></a>
-    <nav aria-label="Main navigation"><a href="./">Home</a><a href="gifts/#collections">Gifts</a><a href="gifts/#how-it-works">How it works</a><a class="nav-cta" href="/jwellery/" aria-label="Shop Seemani jewellery">Gift Jewellery <span aria-hidden="true">↗</span></a></nav>
-  </header>
-  <main>
-    <section class="dussehra-strip" aria-label="Create a Dussehra greeting"><div class="dussehra-strip-art">🏹 ✨</div><div class="dussehra-strip-copy"><p>✨ A FESTIVE LITTLE SURPRISE ✨</p><h2>Send a <em>Dussehra</em> wish</h2><span>A tiny Ravana story, made just for someone special.</span></div><form id="dussehra-form" class="dussehra-form"><label><span>For</span><input id="dussehra-to" maxlength="48" required placeholder="Their name"></label><label><span>From</span><input id="dussehra-from" maxlength="48" required placeholder="Your name"></label><button type="submit">Create wish ↗</button></form><div id="dussehra-share" class="dussehra-share" hidden><label for="dussehra-share-url">Your shareable wish link</label><div class="dussehra-share-row"><input id="dussehra-share-url" readonly aria-label="Shareable Dussehra wish URL"><button id="dussehra-copy" type="button">Copy link</button><button id="dussehra-native-share" type="button">Share ↗</button></div><p>Anyone opening this link will see your names and the animated Dussehra story.</p></div></section>
-    <section id="dussehra-story" class="dussehra-story" hidden><div class="dussehra-story-head"><p>THE TEN-HEADED GIGGLE</p><h2>Scroll to tell the <em>Dussehra story</em></h2><span>Watch the magic unfold as you scroll.</span></div><button id="dussehra-play" class="dussehra-play" type="button">▶ Play the story</button><div class="dussehra-scroll-track" id="dussehra-track"><div class="dussehra-sticky"><img class="dussehra-gif" src="/serverless/seemani_ravana_dussehra.gif" alt="Animated Ravana Dussehra greeting" loading="eager"><div class="dussehra-moon"></div><div class="dussehra-festive-lights">✦　·　✧　·　✦　·　✧　·　✦</div><div class="dussehra-ravana"><div class="dussehra-heads" id="dussehra-heads"></div><div class="dussehra-body"><span class="ravana-crown">♛</span><span class="ravana-face">😆</span><span class="ravana-tummy">✦</span></div><div class="dussehra-arrow" id="dussehra-arrow">➶</div></div><div class="dussehra-comic" id="dussehra-comic"><span class="comic-stars">✦ ✧ ✦</span><strong id="dussehra-message">Happy Dussehra!</strong><small id="dussehra-signoff">With festive wishes ♡</small></div><p class="dussehra-scroll-hint" id="dussehra-hint">↓ SCROLL TO MAKE MAGIC ↓</p><div class="dussehra-ground"></div></div></div><p class="dussehra-story-end">May goodness win, laughter stay, and your year shine bright. ✨</p><div class="dussehra-create-own"><p>Want to surprise someone your own way?</p><a href="gifts/#collections" class="dussehra-own-btn">Create your own <span aria-hidden="true">↗</span></a></div></section>
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-dot"></span> MADE FOR THE ONE WHO HAS YOUR HEART</p>
-        <h1>Make their heart<br>feel <em>butterflies.</em></h1>
-        <p class="hero-text">Love notes, memory pages and tiny digital surprises for the person who makes your world softer.</p>
-        <a class="primary-btn" href="#collections">Explore gifts <span aria-hidden="true">↓</span></a>
-        <div class="social-proof"><div class="avatar-stack"><span>♡</span><span>✦</span><span>☺</span></div><span>Small gestures. Big feelings.</span></div>
+  <header class="reference-header sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-blush-100/60 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 py-3 flex items-center justify-between gap-3">
+      <a href="./" class="flex items-center space-x-2 group shrink-0" aria-label="Seemani home">
+        <span class="w-10 h-10 rounded-full bg-gradient-to-tr from-blush-400 to-blush-200 flex items-center justify-center text-white font-serif text-xl shadow-md shadow-blush-200 group-hover:scale-105 transition-transform">s</span>
+        <span class="font-serif text-2xl tracking-wide font-bold text-gray-800">seemani<span class="text-blush-500">.</span></span>
+      </a>
+      <nav id="main-navigation" aria-label="Main navigation" class="reference-nav hidden md:flex items-center gap-5 lg:gap-8 text-sm font-medium text-gray-600">
+        <a href="./" class="hover:text-blush-500 transition-colors">Home</a>
+        <a href="#collections" class="hover:text-blush-500 transition-colors">Gifts</a>
+        <a href="#how-it-works" class="hover:text-blush-500 transition-colors">How it works</a>
+        <a href="/jwellery/" class="text-blush-500 font-semibold hover:opacity-80 transition-opacity flex items-center gap-1.5"><i class="fa-regular fa-gem text-xs"></i> Send Jewellery <span class="bg-blush-100 text-blush-600 text-[10px] px-1.5 py-0.5 rounded-full uppercase tracking-wider">New</span></a>
+      </nav>
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <button type="button" id="music-btn" class="glass-pill px-3 py-2 rounded-full text-xs font-semibold text-gray-700 hover:bg-blush-50 transition-all flex items-center gap-2 shadow-sm" aria-pressed="false" title="Toggle dreamy vibe"><i class="fa-solid fa-music text-blush-400" id="music-icon"></i><span class="hidden sm:inline" id="music-text">Dreamy Vibe</span></button>
+        <a href="#collections" class="bg-gradient-to-r from-blush-500 to-blush-400 text-white px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium shadow-md shadow-blush-200 hover:shadow-lg hover:from-blush-600 hover:to-blush-500 transition-all whitespace-nowrap">Explore Gifts</a>
+        <button type="button" id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full border border-blush-200 bg-white/80 text-gray-700 flex items-center justify-center" aria-label="Open navigation" aria-expanded="false" aria-controls="main-navigation"><i class="fa-solid fa-bars"></i></button>
       </div>
-      <div class="hero-art" aria-label="Illustration of a digital gift">
-        <div class="spark spark-one">✦</div><div class="spark spark-two">✧</div><div class="spark spark-three">♡</div>
-        <div class="gift-shadow"></div><div class="gift-box"><div class="gift-ribbon-v"></div><div class="gift-ribbon-h"></div><div class="gift-bow">♡</div></div>
-        <div class="note note-top"><span>just for you</span> 💌</div><div class="note note-bottom">made with love <span>♥</span></div>
+    </div>
+  </header>
+  <div class="bg-gradient-to-r from-blush-50 via-pink-50 to-lavender-50 border-b border-blush-100 py-3 px-4 text-center">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 text-xs sm:text-sm text-gray-700">
+      <span class="text-blush-500 text-base">✨</span><span class="font-medium">Send a thoughtful surprise — make every moment feel magical.</span><span class="text-blush-500 text-base hidden sm:inline">🦋</span>
+    </div>
+  </div>
+  <main>
+    <section class="relative pt-10 sm:pt-12 pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left reveal">
+          <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blush-100/70 border border-blush-200 text-blush-600 text-xs font-semibold tracking-wide uppercase"><span>A thoughtful little surprise</span><span>💖</span></div>
+          <h1 class="font-serif text-5xl sm:text-7xl lg:text-8xl font-normal text-gray-900 tracking-tight leading-[1.05]">Make their<br>heart <span class="italic font-light text-blush-500 font-serif">feel butterflies.</span></h1>
+          <p class="text-gray-600 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">Lock notes, memory pages, and tiny digital surprises for the person who makes your world feel soft.</p>
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="#collections" class="bg-gray-900 text-white px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-medium text-sm shadow-xl shadow-gray-200 hover:bg-blush-500 hover:shadow-blush-200 transition-all transform hover:-translate-y-1 inline-flex items-center gap-2"><span>Explore Gifts</span><i class="fa-solid fa-arrow-right text-xs"></i></a>
+            <div class="flex items-center gap-3 px-4 py-2 bg-white/60 rounded-full border border-blush-100 shadow-sm">
+              <div class="flex -space-x-2"><img class="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt=""><img class="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80" alt=""><img class="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80" alt=""></div>
+              <span class="text-xs font-semibold text-gray-700">Thoughtful surprises, made personal</span>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-5 relative flex justify-center reveal mt-5 lg:mt-0">
+          <div class="absolute w-64 h-64 sm:w-72 sm:h-72 bg-gradient-to-tr from-blush-200 to-pink-200 rounded-full blur-3xl opacity-60 -z-10 animate-pulse-slow"></div>
+          <div class="glass-card p-5 sm:p-8 rounded-[2.5rem] shadow-2xl relative w-full max-w-md border border-white/80 animate-float">
+            <div class="absolute -top-4 -right-1 sm:-right-2 bg-white px-4 py-1.5 rounded-full shadow-md border border-blush-100 text-xs font-bold text-blush-500 flex items-center gap-1.5 animate-bounce"><span>Just for you</span><span>🎁</span></div>
+            <div class="bg-gradient-to-br from-blush-100 via-pink-50 to-lavender-50 rounded-3xl p-5 sm:p-6 relative overflow-hidden flex flex-col items-center text-center">
+              <div class="absolute top-3 left-4 text-[10px] sm:text-xs font-semibold text-blush-600 tracking-wider uppercase">Gift Box Ready</div>
+              <div class="my-6 sm:my-7 relative">
+                <div class="w-32 h-32 sm:w-36 sm:h-36 bg-gradient-to-br from-blush-400 to-blush-500 rounded-3xl shadow-xl flex items-center justify-center transform rotate-3 hover:rotate-0 transition-transform duration-500 relative">
+                  <div class="absolute inset-y-0 w-8 bg-pink-200/90 shadow-inner"></div><div class="absolute inset-x-0 h-8 bg-pink-200/90 shadow-inner"></div><div class="absolute -top-6 w-16 h-8 border-4 border-pink-200 rounded-full -rotate-12"></div><div class="absolute -top-6 w-16 h-8 border-4 border-pink-200 rounded-full rotate-12"></div><div class="relative z-10 text-white text-3xl">💖</div>
+                </div>
+              </div>
+              <div class="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl shadow-sm border border-blush-100 text-xs font-medium text-gray-700 flex items-center justify-between gap-3 w-full"><span class="text-gray-500">To: My dearest love</span><span class="text-blush-500 font-bold whitespace-nowrap"><i class="fa-solid fa-lock-open mr-1"></i>Unlocked</span></div>
+            </div>
+            <div class="mt-6 flex items-center justify-between gap-3 px-2"><div class="flex items-center gap-2 text-gray-500 text-xs"><i class="fa-solid fa-heart text-blush-400"></i><span>Sent via secret link</span></div><span class="text-[10px] sm:text-xs font-bold text-gray-800 bg-blush-50 px-3 py-1 rounded-full border border-blush-100 text-right">100% Personalised</span></div>
+          </div>
+        </div>
       </div>
     </section>
+    <section class="dussehra-strip" aria-label="Create a Dussehra greeting"><div class="dussehra-strip-art">🏹 ✨</div><div class="dussehra-strip-copy"><p>✨ A FESTIVE LITTLE SURPRISE ✨</p><h2>Send a <em>Dussehra</em> wish</h2><span>A tiny Ravana story, made just for someone special.</span></div><form id="dussehra-form" class="dussehra-form"><label><span>For</span><input id="dussehra-to" maxlength="48" required placeholder="Their name"></label><label><span>From</span><input id="dussehra-from" maxlength="48" required placeholder="Your name"></label><button type="submit">Create wish ↗</button></form><div id="dussehra-share" class="dussehra-share" hidden><label for="dussehra-share-url">Your shareable wish link</label><div class="dussehra-share-row"><input id="dussehra-share-url" readonly aria-label="Shareable Dussehra wish URL"><button id="dussehra-copy" type="button">Copy link</button><button id="dussehra-native-share" type="button">Share ↗</button></div><p>Anyone opening this link will see your names and the animated Dussehra story.</p></div></section>
+    <section id="dussehra-story" class="dussehra-story" hidden><div class="dussehra-story-head"><p>THE TEN-HEADED GIGGLE</p><h2>Scroll to tell the <em>Dussehra story</em></h2><span>Watch the magic unfold as you scroll.</span></div><button id="dussehra-play" class="dussehra-play" type="button">▶ Play the story</button><div class="dussehra-scroll-track" id="dussehra-track"><div class="dussehra-sticky"><img class="dussehra-gif" src="/serverless/seemani_ravana_dussehra.gif" alt="Animated Ravana Dussehra greeting" loading="eager"><div class="dussehra-moon"></div><div class="dussehra-festive-lights">✦　·　✧　·　✦　·　✧　·　✦</div><div class="dussehra-ravana"><div class="dussehra-heads" id="dussehra-heads"></div><div class="dussehra-body"><span class="ravana-crown">♛</span><span class="ravana-face">😆</span><span class="ravana-tummy">✦</span></div><div class="dussehra-arrow" id="dussehra-arrow">➶</div></div><div class="dussehra-comic" id="dussehra-comic"><span class="comic-stars">✦ ✧ ✦</span><strong id="dussehra-message">Happy Dussehra!</strong><small id="dussehra-signoff">With festive wishes ♡</small></div><p class="dussehra-scroll-hint" id="dussehra-hint">↓ SCROLL TO MAKE MAGIC ↓</p><div class="dussehra-ground"></div></div></div><p class="dussehra-story-end">May goodness win, laughter stay, and your year shine bright. ✨</p><div class="dussehra-create-own"><p>Want to surprise someone your own way?</p><a href="gifts/#collections" class="dussehra-own-btn">Create your own <span aria-hidden="true">↗</span></a></div></section>
     <section class="collections section-wrap" id="collections">
       <div class="section-heading"><div><p class="eyebrow">A LITTLE SOMETHING FOR YOUR SOMEONE</p><h2>Find your kind of <em>romance.</em></h2></div><p class="section-intro">For the person you miss, the one you adore, and the memories you keep replaying.</p></div>
       <div class="toolbar">
@@ -244,6 +371,40 @@ const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.ad
 <script id="dussehra-user-scroll-trigger">
 (()=>{const stage=document.querySelector('.dussehra-ravana'),heads=document.getElementById('dussehra-heads'),arrow=document.getElementById('dussehra-arrow'),bubble=document.getElementById('dussehra-comic');if(!stage||!heads||!arrow||!bubble)return;arrow.classList.add('flying-arrow');bubble.classList.add('speech-bubble');bubble.querySelector('strong')?.classList.add('bubble-text');bubble.querySelector('small')?.classList.add('bubble-from');let triggered=false,timers=[];function reset(){timers.forEach(clearTimeout);timers=[];triggered=false;heads.classList.remove('fallen');arrow.classList.remove('shoot');arrow.style.opacity='';bubble.classList.remove('show')}function trigger(){if(triggered)return;triggered=true;timers.push(setTimeout(()=>arrow.classList.add('shoot'),200));timers.push(setTimeout(()=>{heads.classList.add('fallen');arrow.style.opacity='0'},900));timers.push(setTimeout(()=>{heads.classList.remove('fallen');bubble.classList.remove('hidden');bubble.classList.add('show')},2200))}const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting&&entry.boundingClientRect.top<innerHeight*.6)trigger()}},{threshold:.05});observer.observe(stage);document.getElementById('dussehra-form')?.addEventListener('submit',reset)})();
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const menuButton=document.getElementById('mobile-menu-btn');
+  const nav=document.getElementById('main-navigation');
+  if(menuButton&&nav){
+    menuButton.addEventListener('click',()=>{
+      const open=nav.classList.toggle('mobile-open');
+      menuButton.setAttribute('aria-expanded',String(open));
+      menuButton.setAttribute('aria-label',open?'Close navigation':'Open navigation');
+      menuButton.innerHTML=open?'<i class="fa-solid fa-xmark"></i>':'<i class="fa-solid fa-bars"></i>';
+    });
+    nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{
+      nav.classList.remove('mobile-open');menuButton.setAttribute('aria-expanded','false');
+      menuButton.setAttribute('aria-label','Open navigation');
+      menuButton.innerHTML='<i class="fa-solid fa-bars"></i>';
+    }));
+  }
+  const music=document.getElementById('music-btn');
+  if(music) music.addEventListener('click',()=>{
+    const active=music.getAttribute('aria-pressed')!=='true';
+    music.setAttribute('aria-pressed',String(active));
+    const text=document.getElementById('music-text'),icon=document.getElementById('music-icon');
+    if(text) text.textContent=active?'Dreamy Vibe On':'Dreamy Vibe';
+    if(icon){icon.classList.toggle('fa-compact-disc',active);icon.classList.toggle('fa-spin',active);icon.classList.toggle('fa-music',!active);}
+    music.classList.toggle('bg-blush-50',active);
+  });
+  const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add('active');revealObserver.unobserve(entry.target);}
+  }),{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+});
+</script>
+
   <script src="gifts/store.js" defer></script>
 </body>
 </html>
