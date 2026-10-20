@@ -274,7 +274,7 @@
       }catch(error){shareUrl.focus();shareUrl.select();document.getElementById('dussehra-copy-status').textContent='Select the link above and copy it.'}
     });
     document.getElementById('dussehra-create-another').addEventListener('click',()=>{window.location.href='/dusshera/'});
-nativeShare.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:'A Dussehra wish for you',text:'',url:shareUrl.value})}catch(e){}}else{copy.click()}});window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);const params=new URLSearchParams(window.location.search);if(params.get('dussehra')==='1'&&params.get('to')&&params.get('from'))makeWish(params.get('to').slice(0,48),params.get('from').slice(0,48),true)})();
+nativeShare.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:'A Dussehra wish for you',text:'',url:shareUrl.value})}catch(e){}}else{copy.click()}});window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);const params=new URLSearchParams(window.location.search);const sharedTo=params.get('to'),sharedFrom=params.get('from');if(sharedTo&&sharedFrom)makeWish(sharedTo.slice(0,48),sharedFrom.slice(0,48),true)})();
 </script>
   <style id="dussehra-reference-motion">
 /* Reference-video pass: portrait story stage, glowing cloudscape, golden fairy lights and confetti. */
