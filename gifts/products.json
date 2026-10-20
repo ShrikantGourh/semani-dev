@@ -26,6 +26,19 @@
     "image": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1000&q=85"
   },
   {
+    "id": "birthday-wish-song",
+    "title": "A Birthday Note + Song",
+    "category": "birthday",
+    "description": "Create a heartfelt birthday message for family, friends or colleagues, add a birthday melody, and share their own little celebration page.",
+    "priceLabel": "Free",
+    "badge": "MAKE THEIR DAY",
+    "emoji": "🎂",
+    "theme": "birthday",
+    "url": "/#birthday-creator",
+    "status": "available",
+    "image": "https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=1000&q=85"
+  },
+  {
     "id": "love-letter",
     "title": "A Letter From the Heart",
     "category": "love",
