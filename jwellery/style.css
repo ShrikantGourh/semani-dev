@@ -864,3 +864,67 @@ footer {
 .card-qty {
   margin-top: 10px;
 }
+
+
+/* Seemani jewellery responsive refinements */
+html{scroll-padding-top:92px}
+body{overflow-x:clip}
+img,iframe,video{max-width:100%}
+.nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.nav .brand{flex-shrink:0}
+.nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav nav{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,1.6vw,22px);flex-wrap:wrap}
+.nav nav a{white-space:nowrap}
+.hero-content,.hero-content p{max-width:100%}
+.catalog,.popular-searches,.seo-content,.faq-section,.founder,.instagram,.checkout-section,.cart-section{width:min(1200px,calc(100% - 40px));margin-left:auto;margin-right:auto}
+.catalog-controls{grid-template-columns:minmax(180px,2fr) repeat(3,minmax(120px,1fr))}
+.product-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.product-card{min-width:0}
+.product-card img{max-width:100%;height:auto;object-fit:cover}
+.product-detail-shell{width:min(1000px,calc(100% - 28px));max-height:calc(100dvh - 28px);overflow:auto}
+@media(max-width:1000px){
+ .nav{padding:14px 20px}
+ .nav nav{gap:8px 14px}
+ .catalog-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .hero{padding-inline:24px}
+}
+@media(max-width:768px){
+ .nav{padding:12px 14px}
+ .nav .brand img{max-width:42px}
+ .nav nav{display:none;position:absolute;top:calc(100% + 8px);right:12px;width:min(300px,calc(100vw - 24px));background:#fff;border:1px solid #eee;border-radius:14px;box-shadow:0 12px 28px #0002;padding:10px;flex-direction:column;align-items:stretch;gap:2px;z-index:1000}
+ .nav.nav-open nav{display:flex}
+ .nav nav a{padding:12px;border-radius:9px}
+ .nav-actions .nav-cart-btn{white-space:nowrap}
+ .hero{padding:112px 20px 35px;min-height:0}
+ .hero h1{font-size:clamp(29px,7vw,42px);line-height:1.2}
+ .hero p{font-size:15px}
+ .catalog,.popular-searches,.seo-content,.faq-section,.founder,.instagram,.checkout-section,.cart-section{width:calc(100% - 28px)}
+ .catalog-controls{grid-template-columns:1fr}
+ .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .cart-wrapper,.founder-box{grid-template-columns:1fr}
+ .founder-box{text-align:center}
+ .founder-photo{margin-inline:auto;max-width:min(100%,280px)}
+ .cart-items li{flex-wrap:wrap}
+ .cart-actions{margin-left:0}
+ .product-detail-grid,.product-specs{grid-template-columns:1fr}
+ .product-gallery-item{min-height:180px;max-height:48vh}
+ .product-gallery-item img{height:48vh;max-height:420px;object-fit:contain}
+ .product-detail-shell{padding:18px}
+ .checkout-section form{width:100%}
+ .checkout-section input,.checkout-section textarea,.catalog-controls input,.catalog-controls select{min-width:0;width:100%}
+ .instagram iframe{max-width:100%}
+}
+@media(max-width:420px){
+ .nav{gap:8px}
+ .nav .brand span{font-size:14px}
+ .nav .brand img{max-width:34px}
+ .nav-actions .nav-cart-btn{font-size:12px;padding:8px}
+ .nav-menu-toggle{padding:8px}
+ .hero{padding-inline:14px}
+ .hero h1{font-size:29px}
+ .product-grid{grid-template-columns:1fr}
+ .product-gallery-item{min-height:160px}
+ .product-gallery-item img{height:38vh}
+ .catalog,.popular-searches,.seo-content,.faq-section,.founder,.instagram,.checkout-section,.cart-section{width:calc(100% - 20px)}
+}
