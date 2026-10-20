@@ -46,6 +46,94 @@
       display: none !important;
     }
   </style>
+
+  <style id="seemani-responsive-overrides">
+    *,*::before,*::after{box-sizing:border-box}
+    img,video,iframe{max-width:100%}
+    body{overflow-x:clip}
+    .topbar{gap:12px;flex-wrap:wrap}
+    .topbar nav{display:flex;align-items:center;justify-content:flex-end;gap:clamp(10px,2vw,26px);flex-wrap:wrap}
+    .topbar nav a{white-space:nowrap}
+    .hero{gap:clamp(24px,5vw,70px)}
+    .hero-copy,.hero-art{min-width:0}
+    .section-wrap{width:min(1160px,calc(100% - 40px));margin-inline:auto}
+    .dussehra-strip{min-width:0}
+    .dussehra-form{min-width:0}
+    .dussehra-form label{min-width:0}
+    .dussehra-form input{max-width:100%}
+    .dussehra-share-row{flex-wrap:wrap}
+    .dussehra-share-row input{min-width:0}
+    .dussehra-story,.dussehra-strip{max-width:calc(100% - 32px)}
+    .dussehra-sticky{padding-inline:12px}
+    .dussehra-gif{display:block;width:min(100%,720px);height:auto;max-height:50vh;object-fit:contain}
+    @media(max-width:760px){
+      .topbar{padding:14px 18px;align-items:flex-start}
+      .topbar nav{width:100%;justify-content:flex-start;gap:8px 14px}
+      .topbar nav a{font-size:12px}
+      .topbar nav .nav-cta{margin-left:auto}
+      .hero{grid-template-columns:1fr;padding:48px 22px 36px;text-align:center}
+      .hero-copy{order:1}
+      .hero-art{order:0;min-height:260px;transform:scale(.9);transform-origin:center}
+      .hero h1{font-size:clamp(36px,9vw,54px);line-height:1.05}
+      .hero-text{max-width:38ch;margin-inline:auto}
+      .social-proof{justify-content:center}
+      .section-heading{gap:12px;align-items:flex-start;flex-direction:column}
+      .section-intro{max-width:55ch}
+      .toolbar{gap:12px}
+      .filters{display:flex;flex-wrap:wrap}
+      .search{width:100%}
+      .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+      .product-card{min-width:0}
+      .product-info{padding:12px}
+      .product-info h3{overflow-wrap:anywhere}
+      .dussehra-strip{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:16px}
+      .dussehra-strip-art{align-self:start}
+      .dussehra-strip-copy{min-width:0}
+      .dussehra-strip-copy h2{font-size:clamp(22px,5vw,28px)}
+      .dussehra-form,.dussehra-share{grid-column:1/-1;width:100%}
+      .dussehra-form{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .dussehra-form label{min-width:0}
+      .dussehra-form input{width:100%;min-width:0}
+      .dussehra-form button{grid-column:1/-1;width:100%}
+      .dussehra-share-row input{flex:1 1 100%;width:100%}
+      .dussehra-share-row button{flex:1}
+      .dussehra-story-head{padding:28px 16px 12px}
+      .dussehra-scroll-track{height:180vh}
+      .dussehra-sticky{min-height:440px;height:88svh;max-height:760px}
+      .dussehra-moon{width:120px;height:120px;right:5%;top:8%}
+      .dussehra-ravana{height:220px;width:100%}
+      .dussehra-heads{gap:0}
+      .dussehra-head{width:clamp(27px,7.7vw,46px);height:clamp(37px,9vw,54px);font-size:clamp(16px,4.7vw,25px);border-width:1px}
+      .dussehra-head:before{font-size:12px;top:-13px}
+      .dussehra-body{width:100px;height:125px}
+      .ravana-face{font-size:40px}
+      .dussehra-arrow{font-size:56px;right:2%;top:-45px}
+      .dussehra-comic{width:min(92%,420px);padding:14px 12px;bottom:12%}
+      .dussehra-comic strong{font-size:clamp(21px,6vw,30px)}
+      .dussehra-story-end{font-size:16px}
+      .steps{grid-template-columns:1fr}
+      footer{gap:14px}
+    }
+    @media(max-width:420px){
+      .topbar{padding:12px 14px}
+      .brand{font-size:20px}
+      .topbar nav{gap:8px 10px}
+      .topbar nav a{font-size:11px}
+      .topbar nav .nav-cta{padding:9px 11px}
+      .hero{padding-inline:16px}
+      .hero-art{min-height:220px;transform:scale(.78);margin:-10px 0}
+      .product-grid{grid-template-columns:1fr}
+      .product-art{height:220px}
+      .dussehra-story,.dussehra-strip{max-width:calc(100% - 20px);width:calc(100% - 20px)}
+      .dussehra-form{grid-template-columns:1fr}
+      .dussehra-form button{grid-column:auto}
+      .dussehra-head{width:clamp(25px,7vw,31px);height:35px;font-size:17px}
+      .dussehra-body{width:88px;height:112px}
+      .ravana-face{font-size:34px}
+      .dussehra-comic{bottom:10%}
+    }
+  </style>
+
 </head>
 <body>
   <header class="topbar">
@@ -54,7 +142,7 @@
   </header>
   <main>
     <section class="dussehra-strip" aria-label="Create a Dussehra greeting"><div class="dussehra-strip-art">🏹 ✨</div><div class="dussehra-strip-copy"><p>✨ A FESTIVE LITTLE SURPRISE ✨</p><h2>Send a <em>Dussehra</em> wish</h2><span>A tiny Ravana story, made just for someone special.</span></div><form id="dussehra-form" class="dussehra-form"><label><span>For</span><input id="dussehra-to" maxlength="48" required placeholder="Their name"></label><label><span>From</span><input id="dussehra-from" maxlength="48" required placeholder="Your name"></label><button type="submit">Create wish ↗</button></form><div id="dussehra-share" class="dussehra-share" hidden><label for="dussehra-share-url">Your shareable wish link</label><div class="dussehra-share-row"><input id="dussehra-share-url" readonly aria-label="Shareable Dussehra wish URL"><button id="dussehra-copy" type="button">Copy link</button><button id="dussehra-native-share" type="button">Share ↗</button></div><p>Anyone opening this link will see your names and the animated Dussehra story.</p></div></section>
-    <section id="dussehra-story" class="dussehra-story" hidden><div class="dussehra-story-head"><p>THE TEN-HEADED GIGGLE</p><h2>Scroll to tell the <em>Dussehra story</em></h2><span>Watch the magic unfold as you scroll.</span></div><button id="dussehra-play" class="dussehra-play" type="button">▶ Play the story</button><div class="dussehra-scroll-track" id="dussehra-track"><div class="dussehra-sticky"><img class="dussehra-gif" src="https://raw.githubusercontent.com/ShrikantGourh/seemani.github.io/main/serverless/seemani_ravana_dussehra.gif" alt="Animated Ravana Dussehra greeting" loading="eager"><div class="dussehra-moon"></div><div class="dussehra-festive-lights">✦　·　✧　·　✦　·　✧　·　✦</div><div class="dussehra-ravana"><div class="dussehra-heads" id="dussehra-heads"></div><div class="dussehra-body"><span class="ravana-crown">♛</span><span class="ravana-face">😆</span><span class="ravana-tummy">✦</span></div><div class="dussehra-arrow" id="dussehra-arrow">➶</div></div><div class="dussehra-comic" id="dussehra-comic"><span class="comic-stars">✦ ✧ ✦</span><strong id="dussehra-message">Happy Dussehra!</strong><small id="dussehra-signoff">With festive wishes ♡</small></div><p class="dussehra-scroll-hint" id="dussehra-hint">↓ SCROLL TO MAKE MAGIC ↓</p><div class="dussehra-ground"></div></div></div><p class="dussehra-story-end">May goodness win, laughter stay, and your year shine bright. ✨</p><div class="dussehra-create-own"><p>Want to surprise someone your own way?</p><a href="gifts/#collections" class="dussehra-own-btn">Create your own <span aria-hidden="true">↗</span></a></div></section>
+    <section id="dussehra-story" class="dussehra-story" hidden><div class="dussehra-story-head"><p>THE TEN-HEADED GIGGLE</p><h2>Scroll to tell the <em>Dussehra story</em></h2><span>Watch the magic unfold as you scroll.</span></div><button id="dussehra-play" class="dussehra-play" type="button">▶ Play the story</button><div class="dussehra-scroll-track" id="dussehra-track"><div class="dussehra-sticky"><img class="dussehra-gif" src="/serverless/seemani_ravana_dussehra.gif" alt="Animated Ravana Dussehra greeting" loading="eager"><div class="dussehra-moon"></div><div class="dussehra-festive-lights">✦　·　✧　·　✦　·　✧　·　✦</div><div class="dussehra-ravana"><div class="dussehra-heads" id="dussehra-heads"></div><div class="dussehra-body"><span class="ravana-crown">♛</span><span class="ravana-face">😆</span><span class="ravana-tummy">✦</span></div><div class="dussehra-arrow" id="dussehra-arrow">➶</div></div><div class="dussehra-comic" id="dussehra-comic"><span class="comic-stars">✦ ✧ ✦</span><strong id="dussehra-message">Happy Dussehra!</strong><small id="dussehra-signoff">With festive wishes ♡</small></div><p class="dussehra-scroll-hint" id="dussehra-hint">↓ SCROLL TO MAKE MAGIC ↓</p><div class="dussehra-ground"></div></div></div><p class="dussehra-story-end">May goodness win, laughter stay, and your year shine bright. ✨</p><div class="dussehra-create-own"><p>Want to surprise someone your own way?</p><a href="gifts/#collections" class="dussehra-own-btn">Create your own <span aria-hidden="true">↗</span></a></div></section>
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow"><span class="eyebrow-dot"></span> MADE FOR THE ONE WHO HAS YOUR HEART</p>
