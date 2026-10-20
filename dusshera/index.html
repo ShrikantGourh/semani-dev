@@ -167,6 +167,11 @@
     .dussehra-play{display:inline-flex!important;align-items:center;justify-content:center;margin:8px auto 0!important;cursor:pointer}
     .dussehra-video-status{min-height:1.2em;max-width:min(620px,calc(100% - 32px));margin:6px auto 0;text-align:center;color:#ffe5b5;font-size:12px;line-height:1.45}
     .dussehra-video-status:empty{display:none}
+    .dussehra-video-copy-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:auto;max-width:calc(100% - 32px);margin:8px auto 0;padding:11px 20px;border:1px solid #f2c979;border-radius:999px;background:linear-gradient(110deg,#ffe4a0,#f4a15a);color:#3b2034;font:700 13px 'DM Sans',sans-serif;box-shadow:0 6px 18px #03061735;cursor:pointer}
+    .dussehra-video-copy-link:hover{filter:brightness(1.04);transform:translateY(-1px)}
+    .dussehra-video-copy-status{min-height:1.2em;max-width:calc(100% - 32px);margin:4px auto 0;text-align:center;color:#ffe5b5;font-size:12px;line-height:1.4}
+    .dussehra-video-copy-status:empty{display:none}
+    .dussehra-video-copy-status[data-state="error"]{color:#ffd0c8}
     @media(max-width:640px){.dussehra-story .dussehra-feature-video{max-height:280px!important}.dussehra-story .dussehra-comic{width:calc(100% - 24px)!important;max-width:calc(100% - 24px)!important;padding:18px 14px!important}.dussehra-story .dussehra-from-plaque{width:calc(100% - 32px)!important}.dussehra-play{max-width:calc(100% - 32px);white-space:normal}}
     .dussehra-recipient-details[hidden]{display:none!important}
     .dussehra-recipient-details{display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,26px);flex-wrap:wrap;width:min(560px,calc(100% - 24px));box-sizing:border-box;margin:16px auto 4px;padding:14px 18px;border:1px solid #e9bd72;border-radius:16px;background:linear-gradient(135deg,#fff7e9,#ffefd9);color:#51233a;box-shadow:0 8px 24px #03061735}
@@ -191,7 +196,7 @@
   </section>
   <main>
     <section class="dussehra-strip" aria-label="Create a Dussehra greeting"><div class="dussehra-strip-art">🏹 ✨</div><div class="dussehra-strip-copy"><p>✨ A FESTIVE LITTLE SURPRISE ✨</p><h2>Send a <em>Dussehra</em> wish</h2><span>A tiny Ravana story, made just for someone special.</span></div><form id="dussehra-form" class="dussehra-form"><label><span>For</span><input id="dussehra-to" maxlength="48" required placeholder="Their name"></label><label><span>From</span><input id="dussehra-from" maxlength="48" required placeholder="Your name"></label><button type="submit">Create wish ↗</button></form><div id="dussehra-share" class="dussehra-share" hidden><div class="share-gift-icon" aria-hidden="true">🎁</div><h3 id="share-card-title">A little Dussehra surprise, <span>made just for you ✨</span></h3><p id="share-card-subtitle" class="share-card-subtitle">Your personalised wish is ready to share.</p><div class="dussehra-share-row"><input id="dussehra-share-url" readonly aria-label="Shareable Dussehra wish URL"><button id="dussehra-copy" type="button"><span aria-hidden="true">▢</span> Copy link</button></div><p id="dussehra-copy-status" class="copy-status" role="status" aria-live="polite">Your personalized wish link will appear here.</p><div class="share-socials"><a id="share-whatsapp" href="#" target="_blank" rel="noopener">🟢<span>WhatsApp</span></a><a id="share-facebook" href="#" target="_blank" rel="noopener">🔵<span>Facebook</span></a><a id="share-x" href="#" target="_blank" rel="noopener">𝕏<span>X (Twitter)</span></a><a id="share-email" href="#">✉️<span>Email</span></a><button id="dussehra-native-share" type="button">🔗<span>Share</span></button></div><button id="dussehra-create-another" class="create-another" type="button">↻ Create Another Dussehra Wish</button></div></section>
-    <section id="dussehra-story" class="dussehra-story" hidden><div class="dussehra-story-head"><p>THE TEN-HEADED GIGGLE</p><h2>Scroll to tell the <em>Dussehra story</em></h2><span>Watch the magic unfold as you scroll.</span></div><div id="dussehra-recipient-details" class="dussehra-recipient-details" hidden aria-label="Personalized Dussehra wish"><div class="dussehra-recipient-field"><span>FOR</span><strong id="dussehra-recipient-to"></strong></div><span class="dussehra-recipient-divider" aria-hidden="true">✦</span><div class="dussehra-recipient-field"><span>FROM</span><strong id="dussehra-recipient-from"></strong></div></div><button id="dussehra-play" class="dussehra-play" type="button">▶ Play with sound</button><p id="dussehra-video-status" class="dussehra-video-status" role="status" aria-live="polite"></p><div class="dussehra-scroll-track" id="dussehra-track"><div class="dussehra-sticky"><video class="dussehra-gif dussehra-feature-video" autoplay controls loop playsinline preload="auto" poster="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/seemani_ravana_dussehra.gif" aria-label="Seemani Dussehra Ravana story video"><source src="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/gemini_generated_video_44ff2274.mp4" type="video/mp4">Your browser does not support HTML video.</video><div class="dussehra-moon"></div><div class="dussehra-festive-lights">✦　·　✧　·　✦　·　✧　·　✦</div><div class="dussehra-ravana"><div class="dussehra-heads" id="dussehra-heads"></div><div class="dussehra-body"><span class="ravana-crown">♛</span><span class="ravana-face">😆</span><span class="ravana-tummy">✦</span></div><div class="dussehra-arrow" id="dussehra-arrow">➶</div></div><div class="dussehra-comic" id="dussehra-comic"><span class="comic-stars">✦ ✧ ✦</span><strong id="dussehra-message">Happy Dussehra!</strong><small id="dussehra-signoff">With festive wishes ♡</small></div><p class="dussehra-scroll-hint" id="dussehra-hint">↓ SCROLL TO MAKE MAGIC ↓</p><div class="dussehra-ground"></div></div></div><p class="dussehra-story-end">May goodness win, laughter stay, and your year shine bright. ✨</p><div class="dussehra-create-own"><p>Want to surprise someone your own way?</p><a href="gifts/#collections" class="dussehra-own-btn">Create your own <span aria-hidden="true">↗</span></a></div></section>
+    <section id="dussehra-story" class="dussehra-story" hidden><div class="dussehra-story-head"><p>THE TEN-HEADED GIGGLE</p><h2>Scroll to tell the <em>Dussehra story</em></h2><span>Watch the magic unfold as you scroll.</span></div><div id="dussehra-recipient-details" class="dussehra-recipient-details" hidden aria-label="Personalized Dussehra wish"><div class="dussehra-recipient-field"><span>FOR</span><strong id="dussehra-recipient-to"></strong></div><span class="dussehra-recipient-divider" aria-hidden="true">✦</span><div class="dussehra-recipient-field"><span>FROM</span><strong id="dussehra-recipient-from"></strong></div></div><button id="dussehra-play" class="dussehra-play" type="button">▶ Play with sound</button><p id="dussehra-video-status" class="dussehra-video-status" role="status" aria-live="polite"></p><div class="dussehra-scroll-track" id="dussehra-track"><div class="dussehra-sticky"><button id="dussehra-video-copy-link" class="dussehra-video-copy-link" type="button"><span aria-hidden="true">▢</span> Copy link</button><p id="dussehra-video-copy-status" class="dussehra-video-copy-status" role="status" aria-live="polite"></p><video class="dussehra-gif dussehra-feature-video" autoplay controls loop playsinline preload="auto" poster="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/seemani_ravana_dussehra.gif" aria-label="Seemani Dussehra Ravana story video"><source src="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/gemini_generated_video_44ff2274.mp4" type="video/mp4">Your browser does not support HTML video.</video><div class="dussehra-moon"></div><div class="dussehra-festive-lights">✦　·　✧　·　✦　·　✧　·　✦</div><div class="dussehra-ravana"><div class="dussehra-heads" id="dussehra-heads"></div><div class="dussehra-body"><span class="ravana-crown">♛</span><span class="ravana-face">😆</span><span class="ravana-tummy">✦</span></div><div class="dussehra-arrow" id="dussehra-arrow">➶</div></div><div class="dussehra-comic" id="dussehra-comic"><span class="comic-stars">✦ ✧ ✦</span><strong id="dussehra-message">Happy Dussehra!</strong><small id="dussehra-signoff">With festive wishes ♡</small></div><p class="dussehra-scroll-hint" id="dussehra-hint">↓ SCROLL TO MAKE MAGIC ↓</p><div class="dussehra-ground"></div></div></div><p class="dussehra-story-end">May goodness win, laughter stay, and your year shine bright. ✨</p><div class="dussehra-create-own"><p>Want to surprise someone your own way?</p><a href="gifts/#collections" class="dussehra-own-btn">Create your own <span aria-hidden="true">↗</span></a></div></section>
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow"><span class="eyebrow-dot"></span> MADE FOR THE ONE WHO HAS YOUR HEART</p>
@@ -375,7 +380,52 @@ const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.ad
       const video = document.querySelector('#dussehra-story .dussehra-feature-video');
       const playButton = document.getElementById('dussehra-play');
       const status = document.getElementById('dussehra-video-status');
+      const copyLinkButton = document.getElementById('dussehra-video-copy-link');
+      const copyLinkStatus = document.getElementById('dussehra-video-copy-status');
       if (!video || !playButton) return;
+
+      if (copyLinkButton) {
+        const originalCopyLabel = copyLinkButton.innerHTML;
+        copyLinkButton.addEventListener('click', async () => {
+          const shareUrl = window.location.href;
+          try {
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(shareUrl);
+            } else {
+              const helper = document.createElement('textarea');
+              helper.value = shareUrl;
+              helper.setAttribute('readonly', '');
+              helper.style.position = 'fixed';
+              helper.style.opacity = '0';
+              document.body.appendChild(helper);
+              helper.select();
+              const copied = document.execCommand('copy');
+              helper.remove();
+              if (!copied) throw new Error('Clipboard unavailable');
+            }
+            copyLinkButton.innerHTML = '✓ Link copied!';
+            copyLinkButton.setAttribute('aria-label', 'Personalized Dussehra link copied');
+            if (copyLinkStatus) {
+              copyLinkStatus.dataset.state = 'success';
+              copyLinkStatus.textContent = 'Personalized wish link copied. Ready to share!';
+            }
+            window.setTimeout(() => {
+              copyLinkButton.innerHTML = originalCopyLabel;
+              copyLinkButton.setAttribute('aria-label', 'Copy personalized Dussehra wish link');
+              if (copyLinkStatus) {
+                copyLinkStatus.textContent = '';
+                delete copyLinkStatus.dataset.state;
+              }
+            }, 2400);
+          } catch (error) {
+            if (copyLinkStatus) {
+              copyLinkStatus.dataset.state = 'error';
+              copyLinkStatus.textContent = 'Could not copy automatically. Copy the page URL from your browser address bar.';
+            }
+          }
+        });
+        copyLinkButton.setAttribute('aria-label', 'Copy personalized Dussehra wish link');
+      }
       const showAutoplayFallback = () => {
         if (status) status.textContent = 'Your browser blocks automatic playback with sound. Tap “Play with sound” to start the story.';
         playButton.textContent = '▶ Play with sound';
