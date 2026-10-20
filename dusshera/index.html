@@ -62,15 +62,6 @@
     @media(prefers-reduced-motion:reduce){#dussehra-fireworks-canvas{display:none}}
   </style>
 
-  <style id="dussehra-background-video-style">
-    #dussehra-background-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;opacity:.34;filter:saturate(1.12) contrast(1.05)}
-    body{background:linear-gradient(180deg,rgba(17,12,37,.58),rgba(20,10,30,.74))!important}
-    #dussehra-fireworks-canvas{z-index:2!important}
-    body>*:not(#dussehra-fireworks-canvas):not(#dussehra-background-video){position:relative;z-index:1}
-    @media(max-width:640px){#dussehra-background-video{opacity:.25}}
-    @media(prefers-reduced-motion:reduce){#dussehra-background-video{display:none}}
-  </style>
- 
   <style id="dussehra-recipient-message-centering">
     /* Keep the personalized greeting plaque centered beneath the video on every screen size. */
     #dussehra-story.gif-wish .dussehra-sticky > .dussehra-comic,
@@ -161,6 +152,24 @@
     @media(prefers-reduced-motion:reduce){.dussehra-hero *{animation:none!important;transition:none!important}}
   </style>
 
+
+  <style id="dussehra-video-and-message-fix">
+    .dussehra-story .dussehra-sticky{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;width:100%;box-sizing:border-box}
+    .dussehra-story .dussehra-feature-video{display:block!important;position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;translate:none!important;width:min(760px,100%)!important;max-width:100%!important;height:auto!important;margin:14px auto 18px!important;align-self:center!important}
+    .dussehra-story .dussehra-comic{display:flex!important;position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;translate:none!important;scale:1!important;opacity:1!important;flex:0 1 auto!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:8px;width:min(620px,calc(100% - 24px))!important;max-width:calc(100% - 24px)!important;margin:12px auto 0!important;padding:clamp(18px,4vw,30px)!important;box-sizing:border-box!important;text-align:center!important;overflow-wrap:anywhere;word-break:normal;white-space:normal;line-height:1.4;z-index:3}
+    .dussehra-story .dussehra-comic:after{display:none!important}
+    .dussehra-story .dussehra-comic>.comic-stars,.dussehra-story .dussehra-comic>strong,.dussehra-story .dussehra-comic>small{display:block!important;position:static!important;width:100%!important;max-width:100%!important;margin:0 auto!important;text-align:center!important;overflow-wrap:anywhere}
+    .dussehra-story .dussehra-comic>strong{line-height:1.25}
+    .dussehra-story .dussehra-comic>small{line-height:1.45}
+    .dussehra-story .dussehra-from-plaque{display:block!important;position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;translate:none!important;width:min(360px,calc(100% - 24px))!important;max-width:100%!important;margin:12px auto 0!important;align-self:center!important;box-sizing:border-box!important;opacity:1!important;text-align:center!important;z-index:4}
+    .dussehra-story.gif-wish .dussehra-from-plaque,.dussehra-story.gif-wish.is-wish .dussehra-from-plaque{display:none!important}
+    .dussehra-story .dussehra-story-head,.dussehra-story .dussehra-story-head p,.dussehra-story .dussehra-story-head h2,.dussehra-story .dussehra-story-head>span{text-align:center!important}
+    .dussehra-play{display:inline-flex!important;align-items:center;justify-content:center;margin:8px auto 0!important;cursor:pointer}
+    .dussehra-video-status{min-height:1.2em;max-width:min(620px,calc(100% - 32px));margin:6px auto 0;text-align:center;color:#ffe5b5;font-size:12px;line-height:1.45}
+    .dussehra-video-status:empty{display:none}
+    @media(max-width:640px){.dussehra-story .dussehra-feature-video{max-height:280px!important}.dussehra-story .dussehra-comic{width:calc(100% - 24px)!important;max-width:calc(100% - 24px)!important;padding:18px 14px!important}.dussehra-story .dussehra-from-plaque{width:calc(100% - 32px)!important}.dussehra-play{max-width:calc(100% - 32px);white-space:normal}}
+  </style>
+
 </head>
 <body>
   <header class="topbar">
@@ -175,7 +184,7 @@
   </section>
   <main>
     <section class="dussehra-strip" aria-label="Create a Dussehra greeting"><div class="dussehra-strip-art">🏹 ✨</div><div class="dussehra-strip-copy"><p>✨ A FESTIVE LITTLE SURPRISE ✨</p><h2>Send a <em>Dussehra</em> wish</h2><span>A tiny Ravana story, made just for someone special.</span></div><form id="dussehra-form" class="dussehra-form"><label><span>For</span><input id="dussehra-to" maxlength="48" required placeholder="Their name"></label><label><span>From</span><input id="dussehra-from" maxlength="48" required placeholder="Your name"></label><button type="submit">Create wish ↗</button></form><div id="dussehra-share" class="dussehra-share" hidden><div class="share-gift-icon" aria-hidden="true">🎁</div><h3 id="share-card-title">A little Dussehra surprise, <span>made just for you ✨</span></h3><p id="share-card-subtitle" class="share-card-subtitle">Your personalised wish is ready to share.</p><div class="dussehra-share-row"><input id="dussehra-share-url" readonly aria-label="Shareable Dussehra wish URL"><button id="dussehra-copy" type="button"><span aria-hidden="true">▢</span> Copy link</button></div><p id="dussehra-copy-status" class="copy-status" role="status" aria-live="polite"></p><div class="share-socials"><a id="share-whatsapp" href="#" target="_blank" rel="noopener">🟢<span>WhatsApp</span></a><a id="share-facebook" href="#" target="_blank" rel="noopener">🔵<span>Facebook</span></a><a id="share-x" href="#" target="_blank" rel="noopener">𝕏<span>X (Twitter)</span></a><a id="share-email" href="#">✉️<span>Email</span></a><button id="dussehra-native-share" type="button">🔗<span>Share</span></button></div><button id="dussehra-create-another" class="create-another" type="button">↻ Create Another Dussehra Wish</button></div></section>
-    <section id="dussehra-story" class="dussehra-story" hidden><div class="dussehra-story-head"><p>THE TEN-HEADED GIGGLE</p><h2>Scroll to tell the <em>Dussehra story</em></h2><span>Watch the magic unfold as you scroll.</span></div><button id="dussehra-play" class="dussehra-play" type="button">▶ Play the story</button><div class="dussehra-scroll-track" id="dussehra-track"><div class="dussehra-sticky"><video class="dussehra-gif dussehra-feature-video" controls loop playsinline preload="metadata" poster="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/seemani_ravana_dussehra.gif" aria-label="Seemani Dussehra Ravana story video"><source src="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/gemini_generated_video_44ff2274.mp4" type="video/mp4">Your browser does not support HTML video.</video><div class="dussehra-moon"></div><div class="dussehra-festive-lights">✦　·　✧　·　✦　·　✧　·　✦</div><div class="dussehra-ravana"><div class="dussehra-heads" id="dussehra-heads"></div><div class="dussehra-body"><span class="ravana-crown">♛</span><span class="ravana-face">😆</span><span class="ravana-tummy">✦</span></div><div class="dussehra-arrow" id="dussehra-arrow">➶</div></div><div class="dussehra-comic" id="dussehra-comic"><span class="comic-stars">✦ ✧ ✦</span><strong id="dussehra-message">Happy Dussehra!</strong><small id="dussehra-signoff">With festive wishes ♡</small></div><p class="dussehra-scroll-hint" id="dussehra-hint">↓ SCROLL TO MAKE MAGIC ↓</p><div class="dussehra-ground"></div></div></div><p class="dussehra-story-end">May goodness win, laughter stay, and your year shine bright. ✨</p><div class="dussehra-create-own"><p>Want to surprise someone your own way?</p><a href="gifts/#collections" class="dussehra-own-btn">Create your own <span aria-hidden="true">↗</span></a></div></section>
+    <section id="dussehra-story" class="dussehra-story" hidden><div class="dussehra-story-head"><p>THE TEN-HEADED GIGGLE</p><h2>Scroll to tell the <em>Dussehra story</em></h2><span>Watch the magic unfold as you scroll.</span></div><button id="dussehra-play" class="dussehra-play" type="button">▶ Play with sound</button><p id="dussehra-video-status" class="dussehra-video-status" role="status" aria-live="polite"></p><div class="dussehra-scroll-track" id="dussehra-track"><div class="dussehra-sticky"><video class="dussehra-gif dussehra-feature-video" autoplay controls loop playsinline preload="auto" poster="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/seemani_ravana_dussehra.gif" aria-label="Seemani Dussehra Ravana story video"><source src="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/gemini_generated_video_44ff2274.mp4" type="video/mp4">Your browser does not support HTML video.</video><div class="dussehra-moon"></div><div class="dussehra-festive-lights">✦　·　✧　·　✦　·　✧　·　✦</div><div class="dussehra-ravana"><div class="dussehra-heads" id="dussehra-heads"></div><div class="dussehra-body"><span class="ravana-crown">♛</span><span class="ravana-face">😆</span><span class="ravana-tummy">✦</span></div><div class="dussehra-arrow" id="dussehra-arrow">➶</div></div><div class="dussehra-comic" id="dussehra-comic"><span class="comic-stars">✦ ✧ ✦</span><strong id="dussehra-message">Happy Dussehra!</strong><small id="dussehra-signoff">With festive wishes ♡</small></div><p class="dussehra-scroll-hint" id="dussehra-hint">↓ SCROLL TO MAKE MAGIC ↓</p><div class="dussehra-ground"></div></div></div><p class="dussehra-story-end">May goodness win, laughter stay, and your year shine bright. ✨</p><div class="dussehra-create-own"><p>Want to surprise someone your own way?</p><a href="gifts/#collections" class="dussehra-own-btn">Create your own <span aria-hidden="true">↗</span></a></div></section>
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow"><span class="eyebrow-dot"></span> MADE FOR THE ONE WHO HAS YOUR HEART</p>
@@ -234,28 +243,12 @@
     @media(max-width:850px){.dussehra-strip{flex-wrap:wrap;gap:13px;padding:20px}.dussehra-strip-copy{flex:1}.dussehra-form{width:100%;display:grid;grid-template-columns:1fr 1fr}.dussehra-form input{width:100%;box-sizing:border-box}.dussehra-form button{grid-column:1/-1}.dussehra-strip-art{font-size:22px}.dussehra-story{width:calc(100% - 20px)}.dussehra-ravana{height:260px}.dussehra-body{width:120px;height:145px}.ravana-face{font-size:47px}.dussehra-head:nth-child(even){margin-top:12px}.dussehra-comic{bottom:14%}}
     @media(prefers-reduced-motion:reduce){.dussehra-head,.dussehra-comic{transition:none!important}.dussehra-festive-lights,.dussehra-scroll-hint{animation:none!important}}
   </style>
-  <script>
-  (() => {
-    const form=document.getElementById('dussehra-form'), story=document.getElementById('dussehra-story'), track=document.getElementById('dussehra-track'), heads=document.getElementById('dussehra-heads'), msg=document.getElementById('dussehra-message'), sign=document.getElementById('dussehra-signoff'), play=document.getElementById('dussehra-play');
-    if(!form||!story||!track||!heads)return;
-    const faces=['😆','😜','😹','😏','😂','😈','🤭','😎','😝','🤣'];
-    faces.forEach((face,i)=>{const h=document.createElement('span');h.className='dussehra-head';h.textContent=face;h.style.setProperty('--fall-x',((i%2?1:-1)*(22+(i%4)*13))+'px');h.style.setProperty('--fall-r',((i%2?1:-1)*(45+(i%3)*25))+'deg');h.setAttribute('aria-label','Ravana head '+(i+1));heads.appendChild(h)});
-    let animFrame=0, autoTimer=null, generated=false;
-    function progress(){if(!generated)return;const rect=track.getBoundingClientRect(), available=track.offsetHeight-innerHeight;const p=Math.max(0,Math.min(1,-rect.top/Math.max(1,available)));story.classList.toggle('is-fallen',p>=.28&&p<.66);story.classList.toggle('is-wish',p>=.66);if(p<.28){story.classList.remove('is-fallen','is-wish')}const hint=document.getElementById('dussehra-hint');if(hint)hint.textContent=p<.28?'↓ SCROLL — HERE COME THE ARROWS ↓':p<.66?'✨ TEN HEADS DOWN! KEEP GOING ✨':'🎉 THE FESTIVE WISH IS HERE 🎉'}
-    function onScroll(){if(!animFrame)animFrame=requestAnimationFrame(()=>{progress();animFrame=0})}
-    form.addEventListener('submit',e=>{e.preventDefault();const to=document.getElementById('dussehra-to').value.trim(),from=document.getElementById('dussehra-from').value.trim();if(!to||!from)return;msg.textContent='Happy Dussehra, '+to+'!';sign.textContent='With festive wishes, from '+from+' ♡';story.hidden=false;generated=true;story.classList.remove('is-fallen','is-wish');story.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});setTimeout(progress,450)});
-    const params=new URLSearchParams(window.location.search), toParam=params.get('to'), fromParam=params.get('from');
-    if(toParam&&fromParam){document.getElementById('dussehra-to').value=toParam;document.getElementById('dussehra-from').value=fromParam;form.dispatchEvent(new Event('submit',{cancelable:true}));}
-    window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);
-    play.addEventListener('click',()=>{if(autoTimer)clearInterval(autoTimer);const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;let p=0;track.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});autoTimer=setInterval(()=>{p+=.012;const max=track.offsetHeight-innerHeight;window.scrollTo({top:window.scrollY+max*.012,behavior:'auto'});if(p>=1){clearInterval(autoTimer);autoTimer=null;progress()}},reduced?30:40)});
-  })();
-  </script>
   <style>
 .dussehra-strip{margin:22px auto;width:min(1160px,calc(100% - 36px));display:flex;align-items:center;gap:20px;padding:22px 26px;border:1px solid #f2d9a3;border-radius:22px;background:linear-gradient(110deg,#fff8e9,#fff0e7,#fff9ee);box-shadow:0 14px 35px #a15a1912}.dussehra-strip-art{font-size:38px}.dussehra-strip-copy{flex:1}.dussehra-strip-copy p,.dussehra-story-head p{font-size:10px;letter-spacing:2px;color:#a96b26;font-weight:800;margin:0 0 5px}.dussehra-strip-copy h2{font:700 27px 'Playfair Display',serif;color:#632b29;margin:0 0 5px}.dussehra-strip-copy h2 em{color:#c77b27}.dussehra-strip-copy>span{font-size:12px;color:#805e54}.dussehra-form{display:flex;align-items:end;gap:8px}.dussehra-form label{display:grid;gap:5px;font-size:11px;font-weight:700;color:#875b43}.dussehra-form input{width:115px;padding:11px;border:1px solid #edcfaa;border-radius:11px;background:#fffdf8;font:inherit}.dussehra-form button,.dussehra-play{border:0;border-radius:12px;background:linear-gradient(120deg,#a94c2c,#d18b28);color:#fff9e8;padding:13px 15px;font-weight:800;cursor:pointer}.dussehra-story{margin:24px auto 45px;width:min(1160px,calc(100% - 36px));border-radius:25px;overflow:hidden;background:linear-gradient(180deg,#17122c,#2d1640 70%,#6b2b30);color:#fff5d7}.dussehra-story[hidden]{display:none}.dussehra-story-head{text-align:center;padding:35px 18px 12px}.dussehra-story-head h2{font:700 clamp(26px,4vw,42px) 'Playfair Display',serif;margin:5px 0 8px}.dussehra-story-head h2 em{color:#ffd28b}.dussehra-story-head>span{font-size:13px;color:#e5c9d4}.dussehra-play{display:block;margin:8px auto;position:relative;z-index:3}.dussehra-scroll-track{height:230vh;position:relative}.dussehra-sticky{height:100vh;min-height:510px;max-height:850px;position:sticky;top:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 43%,#65325e,transparent 48%),linear-gradient(180deg,#17122c,#3b1b45 75%,#6b2b30)}.dussehra-moon{position:absolute;width:190px;height:190px;top:7%;right:12%;border-radius:50%;background:radial-gradient(circle,#ffe9b3,#ffcb8b70 45%,transparent 70%);opacity:.6}.dussehra-festive-lights{position:absolute;top:8%;color:#ffd78b;letter-spacing:8px;animation:dussehraTwinkle 2.5s ease-in-out infinite alternate}.dussehra-ground{position:absolute;bottom:-90px;width:110%;height:170px;background:radial-gradient(ellipse,#b65a4e,#602c45 45%,transparent 72%);border-radius:50%}.dussehra-ravana{position:relative;width:min(720px,94%);height:300px;z-index:2;display:flex;justify-content:center;align-items:flex-end}.dussehra-heads{position:absolute;top:12px;width:100%;display:flex;justify-content:center;gap:clamp(0px,.7vw,8px);z-index:2}.dussehra-head{width:clamp(35px,7.4vw,64px);height:clamp(45px,8vw,68px);border:2px solid #ffd786;border-radius:48% 48% 42% 42%;background:linear-gradient(145deg,#ffcf8a,#d86b4b);display:flex;align-items:center;justify-content:center;font-size:clamp(22px,3.5vw,34px);position:relative;transition:transform .55s,opacity .35s;transform-origin:bottom center}.dussehra-head:before{content:'♛';position:absolute;top:-17px;color:#ffe8a1;font-size:17px}.dussehra-head:nth-child(even){margin-top:18px}.dussehra-body{width:150px;height:170px;border-radius:70px 70px 30px 30px;background:linear-gradient(120deg,#f4a34e,#b93f3d);border:3px solid #ffd68a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 0 35px #ffbd5a40}.ravana-crown{font-size:28px;color:#ffe9a5}.ravana-face{font-size:57px}.ravana-tummy{font-size:24px;color:#ffedb4}.dussehra-arrow{position:absolute;right:8%;top:-100px;font-size:76px;color:#fff0b5;opacity:0;z-index:4}.dussehra-comic{position:absolute;z-index:5;bottom:19%;left:50%;transform:translate(-50%,18px) scale(.85);width:min(440px,86%);padding:18px 22px;border:3px solid #ffd991;border-radius:22px;background:#fff7dc;color:#692b37;text-align:center;opacity:0;transition:opacity .5s,transform .5s}.dussehra-comic strong{display:block;font:700 clamp(24px,4vw,36px) 'Playfair Display',serif;color:#a64b26}.dussehra-comic small{display:block;margin-top:8px;font-weight:700;color:#7d4c45}.comic-stars{display:block;color:#d69b36;letter-spacing:9px;margin-bottom:6px}.dussehra-scroll-hint{position:absolute;z-index:5;bottom:7%;font-size:10px;letter-spacing:2px;color:#ffe2a2;animation:dussehraHint 1.5s infinite}.dussehra-story.is-fallen .dussehra-head{transform:translate(var(--fall-x,0px),220px) rotate(var(--fall-r,70deg));opacity:.15}.dussehra-story.is-fallen .dussehra-arrow{opacity:1;top:16%;transition:top .65s}.dussehra-story.is-wish .dussehra-head{transform:none;opacity:1}.dussehra-story.is-wish .dussehra-comic{opacity:1;transform:translate(-50%,0) scale(1)}.dussehra-story.is-wish .dussehra-scroll-hint{opacity:0}.dussehra-story-end{text-align:center;padding:18px 18px 8px;font:italic 19px 'Playfair Display',serif;color:#ffe0a2}.dussehra-create-own{text-align:center;padding:0 18px 32px}.dussehra-create-own p{margin:0 0 12px;color:#e9c9d5;font-size:13px}.dussehra-own-btn{display:inline-flex;gap:12px;padding:14px 24px;border-radius:999px;border:1px solid #ffe0a0;background:linear-gradient(120deg,#ffdc93,#e7a746 55%,#c75a4d);color:#451c30;text-decoration:none;font-weight:800;box-shadow:0 0 28px #ffca6b55}.dussehra-own-btn:hover{transform:translateY(-3px)}@keyframes dussehraTwinkle{to{opacity:1;transform:translateY(5px)}}@keyframes dussehraHint{50%{transform:translateY(7px);opacity:.55}}@media(max-width:850px){.dussehra-strip{flex-wrap:wrap;gap:13px;padding:20px}.dussehra-form{width:100%;display:grid;grid-template-columns:1fr 1fr}.dussehra-form input{width:100%;box-sizing:border-box}.dussehra-form button{grid-column:1/-1}.dussehra-story{width:calc(100% - 20px)}.dussehra-ravana{height:260px}.dussehra-body{width:120px;height:145px}.dussehra-comic{bottom:14%}}@media(prefers-reduced-motion:reduce){.dussehra-head,.dussehra-comic{transition:none!important}.dussehra-festive-lights,.dussehra-scroll-hint{animation:none!important}}
 </style>
 <script>
-(()=>{const form=document.getElementById('dussehra-form'),story=document.getElementById('dussehra-story'),track=document.getElementById('dussehra-track'),heads=document.getElementById('dussehra-heads'),msg=document.getElementById('dussehra-message'),sign=document.getElementById('dussehra-signoff'),play=document.getElementById('dussehra-play');if(!form||!story||!track||!heads)return;['👑','👑','👑','👑','👑💖','👑','👑','👑','👑','👑'].forEach((face,i)=>{const h=document.createElement('span');h.className='dussehra-head ravan-head'+(i===4?' main-center-head':'');h.textContent=face;h.style.setProperty('--i',i+1);h.style.setProperty('--head-index',i);h.style.setProperty('--fall-x',((i%2?1:-1)*(22+(i%4)*13))+'px');h.style.setProperty('--fall-r',((i%2?1:-1)*(45+(i%3)*25))+'deg');heads.appendChild(h)});heads.classList.add('heads-container');let frame=0,auto=null,generated=false;function progress(){if(!generated)return;const rect=track.getBoundingClientRect(),max=track.offsetHeight-innerHeight,p=Math.max(0,Math.min(1,-rect.top/Math.max(1,max)));story.classList.toggle('is-fallen',p>=.28&&p<.66);story.classList.toggle('is-wish',p>=.66);if(p<.28)story.classList.remove('is-fallen','is-wish')}function onScroll(){if(!frame)frame=requestAnimationFrame(()=>{progress();frame=0})}const share=document.getElementById('dussehra-share'),shareUrl=document.getElementById('dussehra-share-url'),copy=document.getElementById('dussehra-copy'),nativeShare=document.getElementById('dussehra-native-share');function escapeText(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
-    function makeWish(to,from,autoplay){story.classList.add('gif-wish');const storyTitle=story.querySelector('.dussehra-story-head h2'),storySubtitle=story.querySelector('.dussehra-story-head>span');if(storyTitle)storyTitle.textContent='A little Dussehra wish, just for you';if(storySubtitle)storySubtitle.textContent='A little festive magic, made especially for you.';document.getElementById('dussehra-to').value=to;document.getElementById('dussehra-from').value=from;msg.textContent='Happy Dussehra, '+to+'!';sign.textContent='With festive wishes, from '+from+' ♡';story.hidden=false;generated=true;story.classList.remove('is-fallen','is-wish');const url=new URL('/',window.location.origin);url.searchParams.set('dussehra','1');url.searchParams.set('to',to);url.searchParams.set('from',from);shareUrl.value=url.toString();share.hidden=false;
+(()=>{const form=document.getElementById('dussehra-form'),story=document.getElementById('dussehra-story'),track=document.getElementById('dussehra-track'),heads=document.getElementById('dussehra-heads'),msg=document.getElementById('dussehra-message'),sign=document.getElementById('dussehra-signoff'),play=document.getElementById('dussehra-play');if(!form||!story||!track||!heads)return;['👑','👑','👑','👑','👑💖','👑','👑','👑','👑','👑'].forEach((face,i)=>{const h=document.createElement('span');h.className='dussehra-head ravan-head'+(i===4?' main-center-head':'');h.textContent=face;h.style.setProperty('--i',i+1);h.style.setProperty('--head-index',i);h.style.setProperty('--fall-x',((i%2?1:-1)*(22+(i%4)*13))+'px');h.style.setProperty('--fall-r',((i%2?1:-1)*(45+(i%3)*25))+'deg');heads.appendChild(h)});heads.classList.add('heads-container');let frame=0,generated=false;function progress(){if(!generated)return;const rect=track.getBoundingClientRect(),max=track.offsetHeight-innerHeight,p=Math.max(0,Math.min(1,-rect.top/Math.max(1,max)));story.classList.toggle('is-fallen',p>=.28&&p<.66);story.classList.toggle('is-wish',p>=.66);if(p<.28)story.classList.remove('is-fallen','is-wish')}function onScroll(){if(!frame)frame=requestAnimationFrame(()=>{progress();frame=0})}const share=document.getElementById('dussehra-share'),shareUrl=document.getElementById('dussehra-share-url'),copy=document.getElementById('dussehra-copy'),nativeShare=document.getElementById('dussehra-native-share');function escapeText(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    function makeWish(to,from,autoplay){story.classList.add('gif-wish');const storyTitle=story.querySelector('.dussehra-story-head h2'),storySubtitle=story.querySelector('.dussehra-story-head>span');if(storyTitle)storyTitle.textContent='A little Dussehra wish, just for you';if(storySubtitle)storySubtitle.textContent='A little festive magic, made especially for you.';document.getElementById('dussehra-to').value=to;document.getElementById('dussehra-from').value=from;msg.textContent='Happy Dussehra, '+to+'!';sign.textContent='With festive wishes, from '+from+' ♡';story.hidden=false;generated=true;story.classList.remove('is-fallen','is-wish');const url=new URL('/dusshera/',window.location.origin);url.searchParams.set('dussehra','1');url.searchParams.set('to',to);url.searchParams.set('from',from);shareUrl.value=url.toString();share.hidden=false;
       const enc=encodeURIComponent(url.toString()), title=encodeURIComponent('A little Dussehra surprise, made just for you ✨');
       document.getElementById('share-whatsapp').href='https://wa.me/?text='+enc;
       document.getElementById('share-facebook').href='https://www.facebook.com/sharer/sharer.php?u='+enc;
@@ -274,7 +267,7 @@
       }catch(error){shareUrl.focus();shareUrl.select();document.getElementById('dussehra-copy-status').textContent='Select the link above and copy it.'}
     });
     document.getElementById('dussehra-create-another').addEventListener('click',()=>{window.location.href='/dusshera/'});
-nativeShare.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:'A Dussehra wish for you',text:'',url:shareUrl.value})}catch(e){}}else{copy.click()}});window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);play.addEventListener('click',()=>{if(auto)clearInterval(auto);let p=0;const max=track.offsetHeight-innerHeight;track.scrollIntoView({behavior:'smooth',block:'start'});auto=setInterval(()=>{p+=.012;window.scrollTo({top:window.scrollY+max*.012,behavior:'auto'});if(p>=1){clearInterval(auto);auto=null;progress()}},40)});const params=new URLSearchParams(window.location.search);if(params.get('dussehra')==='1'&&params.get('to')&&params.get('from'))makeWish(params.get('to').slice(0,48),params.get('from').slice(0,48),true)})();
+nativeShare.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:'A Dussehra wish for you',text:'',url:shareUrl.value})}catch(e){}}else{copy.click()}});window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);const params=new URLSearchParams(window.location.search);if(params.get('dussehra')==='1'&&params.get('to')&&params.get('from'))makeWish(params.get('to').slice(0,48),params.get('from').slice(0,48),true)})();
 </script>
   <style id="dussehra-reference-motion">
 /* Reference-video pass: portrait story stage, glowing cloudscape, golden fairy lights and confetti. */
@@ -355,13 +348,8 @@ const symbols=['✦','✧','✺','❋','•'];for(let i=0;i<24;i++){const p=docu
 const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.addEventListener('submit',()=>{setTimeout(()=>{plaque.textContent='From: '+(document.getElementById('dussehra-from')?.value.trim()||'Your Friend');},0)});
 })();
 </script>
-<script id="dussehra-user-scroll-trigger">
-(()=>{const stage=document.querySelector('.dussehra-ravana'),heads=document.getElementById('dussehra-heads'),arrow=document.getElementById('dussehra-arrow'),bubble=document.getElementById('dussehra-comic');if(!stage||!heads||!arrow||!bubble)return;arrow.classList.add('flying-arrow');bubble.classList.add('speech-bubble');bubble.querySelector('strong')?.classList.add('bubble-text');bubble.querySelector('small')?.classList.add('bubble-from');let triggered=false,timers=[];function reset(){timers.forEach(clearTimeout);timers=[];triggered=false;heads.classList.remove('fallen');arrow.classList.remove('shoot');arrow.style.opacity='';bubble.classList.remove('show')}function trigger(){if(triggered)return;triggered=true;timers.push(setTimeout(()=>arrow.classList.add('shoot'),200));timers.push(setTimeout(()=>{heads.classList.add('fallen');arrow.style.opacity='0'},900));timers.push(setTimeout(()=>{heads.classList.remove('fallen');bubble.classList.remove('hidden');bubble.classList.add('show')},2200))}const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting&&entry.boundingClientRect.top<innerHeight*.6)trigger()}},{threshold:.05});observer.observe(stage);document.getElementById('dussehra-form')?.addEventListener('submit',reset)})();
-</script>
-  <script src="gifts/store.js" defer></script>
-
-  <video id="dussehra-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="https://raw.githubusercontent.com/ShrikantGourh/semani-dev/main/serverless/gemini_generated_video_44ff2274.mp4" type="video/mp4"></video>
-  <canvas id="dussehra-fireworks-canvas" aria-hidden="true"></canvas>
+<script src="gifts/store.js" defer></script>
+<canvas id="dussehra-fireworks-canvas" aria-hidden="true"></canvas>
   <script id="dussehra-fireworks-animation">
   (()=>{
     const canvas=document.getElementById('dussehra-fireworks-canvas');if(!canvas||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -373,6 +361,57 @@ const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.ad
     function frame(t){ctx.clearRect(0,0,w,h);if(t-lastLaunch>650+Math.random()*600){launch();lastLaunch=t}rockets=rockets.filter(r=>{r.x+=r.vx;r.y+=r.vy;r.vy+=.035;ctx.beginPath();ctx.arc(r.x,r.y,2.1,0,Math.PI*2);ctx.fillStyle=r.color;ctx.shadowBlur=12;ctx.shadowColor=r.color;ctx.fill();ctx.shadowBlur=0;if(r.y<=r.targetY||r.vy>=-.2){burst(r.x,r.y,r.color);return false}return true});sparks=sparks.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.vy=p.vy*.985+.045;p.life--;const alpha=Math.max(0,p.life/p.max);ctx.globalAlpha=alpha;ctx.beginPath();ctx.arc(p.x,p.y,p.size*(.6+p.twinkle*.5),0,Math.PI*2);ctx.fillStyle=p.color;ctx.shadowBlur=8;ctx.shadowColor=p.color;ctx.fill();ctx.shadowBlur=0;return p.life>0});ctx.globalAlpha=1;requestAnimationFrame(frame)}
     resize();window.addEventListener('resize',resize,{passive:true});requestAnimationFrame(frame);
   })();
-  <\/script>
+  </script>
+
+  <script id="dussehra-video-playback">
+    (() => {
+      const video = document.querySelector('#dussehra-story .dussehra-feature-video');
+      const playButton = document.getElementById('dussehra-play');
+      const status = document.getElementById('dussehra-video-status');
+      if (!video || !playButton) return;
+      const showAutoplayFallback = () => {
+        if (status) status.textContent = 'Your browser blocks automatic playback with sound. Tap “Play with sound” to start the story.';
+        playButton.textContent = '▶ Play with sound';
+      };
+      const playWithSound = async () => {
+        video.muted = false;
+        video.defaultMuted = false;
+        video.volume = 1;
+        try {
+          const playback = video.play();
+          if (playback && typeof playback.then === 'function') await playback;
+          if (status) status.textContent = '';
+          playButton.textContent = '❚❚ Pause story';
+        } catch (error) {
+          showAutoplayFallback();
+        }
+      };
+      video.muted = false;
+      video.defaultMuted = false;
+      video.volume = 1;
+      playButton.addEventListener('click', () => {
+        if (!video.paused && !video.ended) {
+          video.pause();
+          return;
+        }
+        playWithSound();
+      });
+      video.addEventListener('play', () => {
+        playButton.textContent = '❚❚ Pause story';
+        if (status) status.textContent = '';
+      });
+      video.addEventListener('pause', () => {
+        playButton.textContent = '▶ Play with sound';
+      });
+      video.addEventListener('click', () => {
+        video.muted = false;
+        video.defaultMuted = false;
+        video.volume = 1;
+      }, { capture: true });
+      const autoplay = video.play();
+      if (autoplay && typeof autoplay.catch === 'function') autoplay.catch(showAutoplayFallback);
+    })();
+  </script>
+
 </body>
 </html>
