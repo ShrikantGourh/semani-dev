@@ -1,0 +1,12 @@
+name = "seemani-gift-api"
+main = "src/index.js"
+compatibility_date = "2026-10-20"
+
+# Cloudflare D1 database for Seemani gifts.
+[[d1_databases]]
+binding = "DB"
+database_name = "seemani_gifting"
+database_id = "35e6eb50-2930-443e-8618-e2503ed480bf"
+
+[observability]
+enabled = true
