@@ -71,6 +71,37 @@
     @media(prefers-reduced-motion:reduce){#dussehra-background-video{display:none}}
   </style>
  
+  <style id="dussehra-recipient-message-centering">
+    /* Keep the personalized greeting plaque centered beneath the video on every screen size. */
+    #dussehra-story.gif-wish .dussehra-sticky > .dussehra-comic,
+    #dussehra-story.gif-wish.is-wish .dussehra-sticky > .dussehra-comic {
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative !important;
+      inset: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      transform: none !important;
+      float: none !important;
+      width: min(620px, calc(100% - 24px)) !important;
+      max-width: calc(100% - 24px) !important;
+      margin: 14px auto 0 !important;
+      align-self: center !important;
+      text-align: center !important;
+      box-sizing: border-box;
+    }
+    #dussehra-story.gif-wish .dussehra-comic > strong,
+    #dussehra-story.gif-wish .dussehra-comic > small {
+      display: block;
+      width: 100%;
+      text-align: center !important;
+      overflow-wrap: anywhere;
+    }
+  </style>
+
   <style id="dussehra-video-mockup-apply">
     /* Apply the approved standalone mockup's video-first story inside the existing Dussehra page. */
     .dussehra-story.gif-wish .dussehra-feature-video,
