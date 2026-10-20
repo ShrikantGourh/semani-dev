@@ -410,5 +410,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 <script id="dussehra-page-redirect">
 (()=>{const form=document.getElementById('dussehra-form');if(!form)return;form.addEventListener('submit',event=>{event.preventDefault();event.stopImmediatePropagation();const to=document.getElementById('dussehra-to')?.value.trim(),from=document.getElementById('dussehra-from')?.value.trim();if(!to||!from)return;const params=new URLSearchParams({to,from});window.location.href='/dusshera/?'+params.toString()},true)})();
 </script>
+<script id="dussehra-share-link-router">
+(()=>{const p=new URLSearchParams(window.location.search);if(p.get('dussehra')!=='1'||!p.get('to')||!p.get('from'))return;const q=new URLSearchParams({dussehra:'1',to:p.get('to').slice(0,48),from:p.get('from').slice(0,48)});window.location.replace('/dusshera/?'+q.toString())})();
+</script>
 </body>
 </html>
