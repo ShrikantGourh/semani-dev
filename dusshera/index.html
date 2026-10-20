@@ -427,7 +427,7 @@ const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.ad
         copyLinkButton.setAttribute('aria-label', 'Copy personalized Dussehra wish link');
       }
       const showAutoplayFallback = () => {
-        if (status) status.textContent = 'Your browser blocks automatic playback with sound. Tap “Play with sound” to start the story.';
+        if (status) status.textContent = 'Tap “Play with sound” to start the Dussehra story.';
         playButton.textContent = '▶ Play with sound';
       };
       const playWithSound = async () => {
@@ -443,22 +443,34 @@ const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.ad
           showAutoplayFallback();
         }
       };
-      video.muted = false;
-      video.defaultMuted = false;
+      // Autoplay with sound is blocked by many browsers. Start silently so the
+      // shared story still plays, then let the visitor enable audio with one tap.
+      video.muted = true;
+      video.defaultMuted = true;
       video.volume = 1;
+      playButton.textContent = '♫ Enable sound';
       playButton.addEventListener('click', () => {
-        if (!video.paused && !video.ended) {
+        if (!video.paused && !video.ended && video.muted) {
+          playWithSound();
+          return;
+        }
+        if (!video.paused && !video.ended && !video.muted) {
           video.pause();
           return;
         }
         playWithSound();
       });
       video.addEventListener('play', () => {
-        playButton.textContent = '❚❚ Pause story';
-        if (status) status.textContent = '';
+        if (video.muted) {
+          playButton.textContent = '♫ Enable sound';
+          if (status) status.textContent = 'Story is playing. Tap “Enable sound” to hear it.';
+        } else {
+          playButton.textContent = '❚❚ Pause story';
+          if (status) status.textContent = '';
+        }
       });
       video.addEventListener('pause', () => {
-        playButton.textContent = '▶ Play with sound';
+        playButton.textContent = video.muted ? '♫ Enable sound' : '▶ Play with sound';
       });
       video.addEventListener('click', () => {
         video.muted = false;
