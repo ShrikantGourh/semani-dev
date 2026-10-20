@@ -426,8 +426,12 @@ const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.ad
         });
         copyLinkButton.setAttribute('aria-label', 'Copy personalized Dussehra wish link');
       }
-      const showAutoplayFallback = () => {
-        if (status) status.textContent = 'Tap “Play with sound” to start the Dussehra story.';
+      const showSoundPrompt = () => {
+        if (status) status.textContent = 'The story is playing. Tap “Enable sound” to hear the audio.';
+        playButton.textContent = '♫ Enable sound';
+      };
+      const showPlayPrompt = () => {
+        if (status) status.textContent = 'Your browser blocked autoplay. Tap “Play with sound” to start the story.';
         playButton.textContent = '▶ Play with sound';
       };
       const playWithSound = async () => {
@@ -440,16 +444,24 @@ const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.ad
           if (status) status.textContent = '';
           playButton.textContent = '❚❚ Pause story';
         } catch (error) {
-          showAutoplayFallback();
+          showPlayPrompt();
         }
       };
-      // Prefer autoplay with audio. Browsers may reject audible autoplay until
-      // the visitor interacts, so keep an explicit one-tap sound/play fallback.
+      // Try audible autoplay first. If the browser blocks it, immediately retry
+      // muted so the video still starts automatically wherever muted autoplay is allowed.
       video.muted = false;
       video.defaultMuted = false;
       video.volume = 1;
       playButton.textContent = '▶ Play with sound';
       playButton.addEventListener('click', () => {
+        if (!video.paused && !video.ended && video.muted) {
+          video.muted = false;
+          video.defaultMuted = false;
+          video.volume = 1;
+          if (status) status.textContent = '';
+          playButton.textContent = '❚❚ Pause story';
+          return;
+        }
         if (!video.paused && !video.ended) {
           video.pause();
           return;
@@ -457,19 +469,30 @@ const originalSubmit=document.getElementById('dussehra-form');originalSubmit?.ad
         playWithSound();
       });
       video.addEventListener('play', () => {
-        if (video.muted) {
-          video.muted = false;
-          video.defaultMuted = false;
-          video.volume = 1;
+        if (video.muted) showSoundPrompt();
+        else {
+          playButton.textContent = '❚❚ Pause story';
+          if (status) status.textContent = '';
         }
-        playButton.textContent = '❚❚ Pause story';
-        if (status) status.textContent = '';
       });
       video.addEventListener('pause', () => {
-        playButton.textContent = '▶ Play with sound';
+        playButton.textContent = video.muted ? '♫ Enable sound' : '▶ Play with sound';
       });
       const autoplay = video.play();
-      if (autoplay && typeof autoplay.catch === 'function') autoplay.catch(showAutoplayFallback);
+      if (autoplay && typeof autoplay.catch === 'function') {
+        autoplay.catch(async () => {
+          video.muted = true;
+          video.defaultMuted = true;
+          video.volume = 1;
+          try {
+            const mutedPlayback = video.play();
+            if (mutedPlayback && typeof mutedPlayback.then === 'function') await mutedPlayback;
+            showSoundPrompt();
+          } catch (mutedError) {
+            showPlayPrompt();
+          }
+        });
+      }
     })();
   </script>
 
