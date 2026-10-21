@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7dce2">
+<meta name="description" content="Another Year of Us — a personalized anniversary gift from Seemani.">
+<title>Another Year of Us | Seemani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--rose:#b84f72;--deep:#5a2940;--ink:#46333c;--muted:#8b747d;--line:#ead5dc;--cream:#fffaf8;--gold:#c89b63}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(135deg,#fff8f5,#f8edf5);color:var(--ink);font-family:"DM Sans",sans-serif}.wrap{width:min(100% - 30px,920px);margin:auto;padding:24px 0 70px}.top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase}.brand{font-weight:700;color:var(--rose);letter-spacing:.18em}.hero,.card,.result{border:1px solid var(--line);background:#ffffffc7;backdrop-filter:blur(12px);box-shadow:0 24px 70px #71364d12;border-radius:30px}.hero{margin-top:28px;padding:clamp(35px,7vw,75px);text-align:center;overflow:hidden;position:relative}.hero:before{content:"♡";position:absolute;right:-35px;top:-85px;font:250px "Playfair Display",serif;color:#b84f7210}.eyebrow{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rose);font-weight:700}.hero h1{font:600 clamp(3rem,9vw,6.5rem)/.95 "Playfair Display",serif;color:var(--deep);letter-spacing:-.055em;margin:16px 0}.hero h1 em{font-weight:500;color:var(--rose)}.hero p{max-width:620px;margin:20px auto 0;color:var(--muted);line-height:1.8}.heart{font-size:1.5rem;color:var(--rose);animation:pulse 2s infinite}@keyframes pulse{50%{transform:scale(1.15)}}.card{margin-top:25px;padding:clamp(24px,5vw,48px)}.label{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rose);font-weight:700}.title{font:600 clamp(2rem,5vw,3.2rem)/1.05 "Playfair Display",serif;color:var(--deep);margin:10px 0 12px}.copy{color:var(--muted);line-height:1.8}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}.field{font-size:.82rem;font-weight:700;color:#6c4c59}.field.full{grid-column:1/-1}input,textarea{display:block;width:100%;margin-top:7px;border:1px solid #e4cbd4;border-radius:14px;padding:14px 15px;background:#fffafd;color:var(--ink);font:inherit;outline:none}textarea{min-height:140px;resize:vertical}input:focus,textarea:focus{border-color:#c67896;box-shadow:0 0 0 4px #c6789620}.btn{border:0;border-radius:999px;padding:15px 22px;background:linear-gradient(135deg,#c86183,#a83f63);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 12px 25px #a83f6327}.btn.secondary{background:transparent;color:var(--rose);border:1px solid #d29aad;box-shadow:none}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.result{display:none;margin-top:25px;padding:clamp(25px,5vw,55px);text-align:center;background:radial-gradient(circle at 80% 10%,#f7dbe4,#fffaf8 42%)}.result.show{display:block}.result h2{font:600 clamp(2.6rem,7vw,5rem)/1 "Playfair Display",serif;color:var(--deep);margin:12px 0}.result .date{color:var(--rose);font-weight:700;letter-spacing:.08em}.result .message{max-width:680px;margin:25px auto 0;text-align:left;white-space:pre-line;line-height:1.95;color:#604b55}.memory{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}.memory div{padding:20px;border-radius:18px;background:#ffffffaa;border:1px solid #edd9df}.memory strong{display:block;color:var(--deep);font-family:"Playfair Display",serif;font-size:1.2rem;margin-bottom:6px}.memory span{font-size:.8rem;color:var(--muted)}.share{margin-top:25px;color:var(--muted);font-size:.8rem;line-height:1.7}.share input{max-width:650px;margin:8px auto 0}.footer{text-align:center;color:#9a818c;font-size:.75rem;padding:28px 0}.back{display:inline-block;margin-top:18px;color:var(--rose);text-decoration:none;font-weight:600}@media(max-width:650px){.grid,.memory{grid-template-columns:1fr}.field.full{grid-column:auto}.top{font-size:.62rem}.hero{border-radius:24px}.card,.result{border-radius:22px}.actions .btn{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span class="brand">SEEMANI</span><span>another year of us ♡</span></div>
+  <section class="hero">
+    <div class="heart">♡</div>
+    <div class="eyebrow">For your person</div>
+    <h1>Another <em>Year</em> of Us</h1>
+    <p>A tiny digital keepsake for the firsts, favourite places, inside jokes and ordinary days that quietly became your story.</p>
+  </section>
+
+  <section class="card" id="creator">
+    <div class="label">Make it yours</div>
+    <h2 class="title">Tell your story.</h2>
+    <p class="copy">Add a few details and Seemani will turn them into a beautiful anniversary page you can share.</p>
+    <form id="form">
+      <div class="grid">
+        <label class="field">Your name<input id="from" required maxlength="60" placeholder="e.g. Saloni"></label>
+        <label class="field">Their name<input id="to" required maxlength="60" placeholder="e.g. Shrikant"></label>
+        <label class="field">Your anniversary<input id="date" type="date"></label>
+        <label class="field">Years together<input id="years" type="number" min="1" max="100" placeholder="e.g. 3"></label>
+        <label class="field full">Your message<textarea id="message" required maxlength="1800" placeholder="Write the things you still want them to know..."></textarea></label>
+      </div>
+      <div class="actions"><button class="btn" type="submit">Create our keepsake ♡</button><button class="btn secondary" type="button" id="clear">Start over</button></div>
+    </form>
+  </section>
+
+  <section class="result" id="result" aria-live="polite">
+    <div class="heart">♡</div>
+    <div class="label">A little piece of your story</div>
+    <h2 id="names">You &amp; Me</h2>
+    <div class="date" id="anniversaryText"></div>
+    <p class="message" id="messageText"></p>
+    <div class="memory">
+      <div><strong id="yearsText">Our story</strong><span>and every chapter still to come</span></div>
+      <div><strong>Firsts</strong><span>the moments that changed everything</span></div>
+      <div><strong>Tomorrows</strong><span>all the little adventures ahead</span></div>
+    </div>
+    <div class="share">Your personalized link is ready. Copy it and send it to your person.<input id="shareUrl" readonly></div>
+    <div class="actions" style="justify-content:center"><button class="btn" id="copy" type="button">Copy link</button><button class="btn secondary" id="edit" type="button">Edit keepsake</button></div>
+  </section>
+
+  <div class="footer">Made with love by Seemani · <a class="back" href="/gifts/">Explore more gifts</a></div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const form = $('form'), result = $('result');
+  const fields = ['from','to','date','years','message'];
+  const esc = value => String(value || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const params = new URLSearchParams(location.search);
+
+  function show(data) {
+    $('names').textContent = `${data.from} & ${data.to}`;
+    $('messageText').textContent = data.message;
+    $('yearsText').textContent = data.years ? `${data.years} ${Number(data.years) === 1 ? 'year' : 'years'} together` : 'Our story';
+    $('anniversaryText').textContent = data.date ? new Date(`${data.date}T12:00:00`).toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'}) : 'A story worth celebrating';
+    const query = new URLSearchParams(data).toString();
+    $('shareUrl').value = `${location.origin}${location.pathname}?${query}`;
+    result.classList.add('show');
+    result.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function dataFromForm() {
+    return Object.fromEntries(fields.map(id => [id, $(id).value.trim()]));
+  }
+
+  form.addEventListener('submit', e => { e.preventDefault(); show(dataFromForm()); });
+  $('copy').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('shareUrl').value); $('copy').textContent = 'Copied ♡'; setTimeout(() => $('copy').textContent = 'Copy link', 1600); } catch { $('shareUrl').select(); document.execCommand('copy'); } });
+  $('edit').addEventListener('click', () => { $('creator').scrollIntoView({behavior:'smooth'}); });
+  $('clear').addEventListener('click', () => { form.reset(); result.classList.remove('show'); history.replaceState({},'',location.pathname); $('creator').scrollIntoView({behavior:'smooth'}); });
+
+  const incoming = Object.fromEntries(fields.map(id => [id, params.get(id) || '']));
+  if (incoming.from && incoming.to && incoming.message) {
+    fields.forEach(id => { $(id).value = incoming[id]; });
+    show(incoming);
+  }
+})();
+</script>
+</body>
+</html>
