@@ -69,12 +69,12 @@
     "title": "Another Year of Us",
     "category": "love",
     "description": "Celebrate the little things that became your story: firsts, favourite places, and all the tomorrows ahead.",
-    "priceLabel": "Coming soon",
+    "priceLabel": "Free",
     "badge": "FOR YOUR PERSON",
     "emoji": "💗",
     "theme": "anniversary",
-    "url": "mailto:hello@seemani.in?subject=Anniversary%20gift",
-    "status": "coming-soon",
+    "url": "/anniversary/",
+    "status": "available",
     "image": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=85"
   },
   {
