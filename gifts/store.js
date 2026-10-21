@@ -64,8 +64,11 @@
   const scriptUrl = document.currentScript && document.currentScript.src
     ? document.currentScript.src
     : new URL("store.js", location.href).href;
+  // Version the catalogue URL so browsers/CDNs cannot keep serving the old
+  // "Coming soon" catalogue after a product is activated.
   const catalogueUrl = new URL("products.json", scriptUrl);
-  fetch(catalogueUrl, { headers: { "Accept": "application/json" } })
+  catalogueUrl.searchParams.set("v", "20261021-anniversary");
+  fetch(catalogueUrl, { headers: { "Accept": "application/json" }, cache: "no-store" })
     .then(response => { if (!response.ok) throw new Error("Catalogue unavailable"); return response.json(); })
     .then(data => {
       if (!Array.isArray(data)) throw new Error("Invalid catalogue");
